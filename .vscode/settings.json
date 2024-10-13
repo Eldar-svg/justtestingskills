@@ -1,0 +1,5 @@
+{
+    "editor.useTabStops": false,
+    "workbench.editor.pinnedTabsOnSeparateRow": true,
+    "git.ignoreLimitWarning": true
+}
