@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import useAxios from "./useAxios";
 import { Todocontext } from "./useReduceStates";
-import { useContext,useState } from "react";
+import { useContext, useState } from "react";
 import Modal from "./Modal";
 function App() {
   const { state, dispatch } = useContext(Todocontext);
@@ -13,8 +13,6 @@ function App() {
   const ToggleBtn = "Toggle";
   const allSelectedBtn = "selectAllBtn";
   const DeleteSelected = "DeleteSelected";
-
-  
 
   const { inputToggle, inputState, handlerinput } = useToggleHook({
     title: "",
@@ -48,6 +46,8 @@ function App() {
     dispatch({ type: DeleteSelected });
   };
 
+  
+
   const {
     loading,
     error,
@@ -79,31 +79,22 @@ function App() {
     deleteDataByCallback("https://api.sampleapis.com/coffee/iced", id);
   };
 
- const [currentPage,setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(1);
+ 
 
- const itemsPerPage = 1;
- const indexOfLastItem = currentPage * itemsPerPage;
+  const itemsPerPage = 2;
+  const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = state.todo.slice(indexOfFirstItem, indexOfLastItem);
 
   const totalPages = Math.ceil(state.todo.length / itemsPerPage);
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+  const pages = Array.from({ length: totalPages }, (_, index) => (index + 1))
+  const handleNextPage = (page) =>  {setCurrentPage(page)}
 
   return (
     <div className="App">
       <Root />
-   <button onClick={toOpenModal}>Open</button>
+      <button onClick={toOpenModal}>Open</button>
       <Modal closeModal={toOpenModal} showModal={inputState.CloseModal}>
         <form onSubmit={handlePost}>
           <p>Title:</p>
@@ -168,7 +159,7 @@ function App() {
       </form>
       <Outlet />
 
-    <ul style={{ listStyle: "none" }}>
+      <ul style={{ listStyle: "none" }}>
         {currentItems
           .filter((prevSearch) => {
             const searchUpperCase = inputState.search.toLowerCase();
@@ -185,23 +176,25 @@ function App() {
                 <NavLink to={`/products/${id}`}>{title}</NavLink>
                 <p> {description}</p>
                 <p>{ingredients}</p>
-                <img src={image} alt={title} width="500" />
+                <img src={image} alt={title} width="300" />
                 <button onClick={() => handleDelete(id)}>Delete</button>
               </li>
             );
           })}
-      </ul>  
-     
-      <button onClick={handlePrevPage} disabled={currentPage === 1}>
-        Previous
-      </button>
-      <button onClick={handleNextPage} disabled={currentPage === totalPages}>
-        Next
-      </button>
+      </ul>
+      {pages.map((pages)=>
+        <button
+          onClick={()=>handleNextPage(pages)}
+          key={pages}
+        >
+          {pages}
+        </button>
+      )}
+
+ 
       <p>
         Page {currentPage} of {totalPages}
       </p>
-     
     </div>
   );
 }
