@@ -4,12 +4,7 @@ import { Todocontext } from "./useReduceStates";
 import { useContext } from "react";
 import { useCallback } from "react";
 
- 
-
 const useAxios = () => {
-
-
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -17,7 +12,7 @@ const useAxios = () => {
 
   const setTodo = "setTodo";
 
-  const handleRequest =  (callback) => {
+  const handleRequest = (callback) => {
     setLoading(true);
     setError(null);
     try {

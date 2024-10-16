@@ -16,6 +16,9 @@ function reducer(state, action) {
             : item
         ),
       };
+    
+
+        
     case "setTodo":
       return { ...state, todo: action.payload };
     case "selectAllBtn":

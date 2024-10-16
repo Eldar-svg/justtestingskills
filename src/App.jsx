@@ -14,6 +14,22 @@ function App() {
   const allSelectedBtn = "selectAllBtn";
   const DeleteSelected = "DeleteSelected";
 
+  const [ingredientBox, setIngredientBox] = useState([]);
+
+  const btntoggleING = (id, isChek) => {
+    if (isChek) {
+      
+      setIngredientBox((item) => [...item, id]);
+    } else {
+      setIngredientBox((item) => 
+
+        item.filter((chex) => console.log(chex))
+    
+      );
+      
+    }
+  };
+
   const { inputToggle, inputState, handlerinput } = useToggleHook({
     title: "",
     description: "",
@@ -45,8 +61,6 @@ function App() {
     e.preventDefault();
     dispatch({ type: DeleteSelected });
   };
-
-  
 
   const {
     loading,
@@ -80,16 +94,19 @@ function App() {
   };
 
   const [currentPage, setCurrentPage] = useState(1);
- 
 
-  const itemsPerPage = 2;
+  const itemsPerPage = 6;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = state.todo.slice(indexOfFirstItem, indexOfLastItem);
 
   const totalPages = Math.ceil(state.todo.length / itemsPerPage);
-  const pages = Array.from({ length: totalPages }, (_, index) => (index + 1))
-  const handleNextPage = (page) =>  {setCurrentPage(page)}
+  const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
+  const handleNextPage = (page) => {
+    setCurrentPage(page);
+  };
+
+  const selectedIngrid = state.todo;
 
   return (
     <div className="App">
@@ -128,6 +145,7 @@ function App() {
           </p>
         </form>
       </Modal>
+
       <div>
         <button onClick={() => inputToggle("openSearch")}>
           {inputState.openSearch ? "close" : "open"}
@@ -158,13 +176,26 @@ function App() {
         </label>
       </form>
       <Outlet />
-
+      {selectedIngrid.map(({ id, ingredients, check }) => (
+        <p key={id}>
+          <input
+            checked={check}
+            onChange={(e) => btntoggleING(id, e.target.checked)}
+            type="checkbox"
+          />
+          {`${ingredients}`}
+        </p>
+      ))}
       <ul style={{ listStyle: "none" }}>
-        {currentItems
-          .filter((prevSearch) => {
-            const searchUpperCase = inputState.search.toLowerCase();
-            return prevSearch.title.toLowerCase().includes(searchUpperCase);
-          })
+        {currentItems.filter((prevSearch) => {
+  const searchUpperCase = inputState.search.toLowerCase();
+
+  const matchesSearch = prevSearch.title.toLowerCase().includes(searchUpperCase);
+
+  const matchesIngredient = ingredientBox.length === 0 || ingredientBox.includes(prevSearch.id); 
+
+  return matchesSearch && matchesIngredient; // Показываем только те элементы, которые соответствуют поисковому запросу и выбранным ингредиентам
+})
           .map(({ id, title, description, ingredients, image, check }) => {
             return (
               <li key={id}>
@@ -182,16 +213,12 @@ function App() {
             );
           })}
       </ul>
-      {pages.map((pages)=>
-        <button
-          onClick={()=>handleNextPage(pages)}
-          key={pages}
-        >
+      {pages.map((pages) => (
+        <button onClick={() => handleNextPage(pages)} key={pages}>
           {pages}
         </button>
-      )}
+      ))}
 
- 
       <p>
         Page {currentPage} of {totalPages}
       </p>
