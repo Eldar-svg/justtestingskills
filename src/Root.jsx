@@ -5,10 +5,10 @@ function Root() {
   const navigate = useNavigate()
     const handleLogOut = () => {
       localStorage.removeItem('token');  
-      localStorage.removeItem('login')
+      localStorage.removeItem('username')
       navigate('/login');   
     };
-const username = localStorage.getItem('login')
+const username = localStorage.getItem('username')
     const isLoggedIn = localStorage.getItem("token") !== null;
 
   return (
