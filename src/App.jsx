@@ -18,15 +18,9 @@ function App() {
 
   const btntoggleING = (id, isChek) => {
     if (isChek) {
-      
       setIngredientBox((item) => [...item, id]);
     } else {
-      setIngredientBox((item) => 
-
-        item.filter((chex) => console.log(chex))
-    
-      );
-      
+      setIngredientBox((item) => item.filter((_id) => _id !==id));
     }
   };
 
@@ -105,7 +99,7 @@ function App() {
   const handleNextPage = (page) => {
     setCurrentPage(page);
   };
-2
+ 
   const selectedIngrid = state.todo;
 
   return (
@@ -187,15 +181,20 @@ function App() {
         </p>
       ))}
       <ul style={{ listStyle: "none" }}>
-        {currentItems.filter((prevSearch) => {
-  const searchUpperCase = inputState.search.toLowerCase();
+        {currentItems
+          .filter((prevSearch) => {
+            const searchUpperCase = inputState.search.toLowerCase();
 
-  const matchesSearch = prevSearch.title.toLowerCase().includes(searchUpperCase);
+            const matchesSearch = prevSearch.title
+              .toLowerCase()
+              .includes(searchUpperCase);
 
-  const matchesIngredient = ingredientBox.length === 0 || ingredientBox.includes(prevSearch.id); 
+            const matchesIngredient =
+              ingredientBox.length === 0 ||
+              ingredientBox.includes(prevSearch.id);
 
-  return matchesSearch && matchesIngredient; // Показываем только те элементы, которые соответствуют поисковому запросу и выбранным ингредиентам
-})
+            return matchesSearch && matchesIngredient; // Показываем только те элементы, которые соответствуют поисковому запросу и выбранным ингредиентам
+          })
           .map(({ id, title, description, ingredients, image, check }) => {
             return (
               <li key={id}>
@@ -213,15 +212,15 @@ function App() {
             );
           })}
       </ul>
-      {pages.map((pages) => (
+      { pages.map((pages) => (
         <button onClick={() => handleNextPage(pages)} key={pages}>
           {pages}
         </button>
       ))}
-
-      <p>
+{totalPages > 0 ? <p>
         Page {currentPage} of {totalPages}
-      </p>
+      </p> : null }
+      
     </div>
   );
 }
