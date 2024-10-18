@@ -7,6 +7,7 @@ import useAxios from "./useAxios";
 import { Todocontext } from "./useReduceStates";
 import { useContext, useState } from "react";
 import Modal from "./Modal";
+import { useQuery, useQueryClient, useMutation } from "react-query";
 function App() {
   const { state, dispatch } = useContext(Todocontext);
 
@@ -17,10 +18,11 @@ function App() {
   const [ingredientBox, setIngredientBox] = useState([]);
 
   const btntoggleING = (id, isChek) => {
+    console.log(ingredientBox)
     if (isChek) {
       setIngredientBox((item) => [...item, id]);
     } else {
-      setIngredientBox((item) => item.filter((_id) => _id !==id));
+      setIngredientBox((item) => item.filter((_id) => _id !== id));
     }
   };
 
@@ -41,6 +43,7 @@ function App() {
 
   const toggleCheck = (_id, value) => {
     dispatch({ type: ToggleBtn, payload: { id: _id, value } });
+    btntoggleING(_id,value)
   };
 
   const selectAllBtn = () => {
@@ -56,17 +59,34 @@ function App() {
     dispatch({ type: DeleteSelected });
   };
 
-  const {
-    loading,
-    error,
-    getDataByCallback,
-    postDataByCallback,
-    deleteDataByCallback,
-  } = useAxios();
+  const { getDataByCallback, postDataByCallback, deleteDataByCallback } =
+    useAxios();
 
   function DataAxsios() {
     getDataByCallback("https://api.sampleapis.com/coffee/iced");
   }
+
+  const {
+    isLoading,
+    isError,
+    refetch: Refresh,
+  } = useQuery("token", DataAxsios, { enabled: false });
+
+  const fethcAgain = () => {
+    Refresh();
+  };
+
+  const queryClient = useQueryClient();
+
+  const postMutation = (newTodo) =>
+    postDataByCallback("https://api.sampleapis.com/coffee/iced", newTodo);
+  
+  const { mutate } = useMutation(postMutation, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("token");
+    },
+  });
+
   const handlePost = (e) => {
     e.preventDefault();
     const newTodo = {
@@ -80,7 +100,7 @@ function App() {
       image: inputState.img,
     };
 
-    postDataByCallback("https://api.sampleapis.com/coffee/iced", newTodo);
+    mutate(newTodo);
   };
 
   const handleDelete = (id) => {
@@ -99,8 +119,16 @@ function App() {
   const handleNextPage = (page) => {
     setCurrentPage(page);
   };
- 
+
   const selectedIngrid = state.todo;
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error occurred while fetching data</div>;
+  }
 
   return (
     <div className="App">
@@ -154,7 +182,7 @@ function App() {
         ) : null}
       </div>
 
-      <button onClick={DataAxsios}>
+      <button onClick={fethcAgain}>
         {state.todo.length === 0 ? "Request Data" : "Refresh"}
       </button>
       <form>
@@ -174,7 +202,7 @@ function App() {
         <p key={id}>
           <input
             checked={check}
-            onChange={(e) => btntoggleING(id, e.target.checked)}
+            onChange={(e) => toggleCheck(id, e.target.checked)}
             type="checkbox"
           />
           {`${ingredients}`}
@@ -212,15 +240,16 @@ function App() {
             );
           })}
       </ul>
-      { pages.map((pages) => (
+      {pages.map((pages) => (
         <button onClick={() => handleNextPage(pages)} key={pages}>
           {pages}
         </button>
       ))}
-{totalPages > 0 ? <p>
-        Page {currentPage} of {totalPages}
-      </p> : null }
-      
+      {totalPages > 0 ? (
+        <p>
+          Page {currentPage} of {totalPages}
+        </p>
+      ) : null}
     </div>
   );
 }
