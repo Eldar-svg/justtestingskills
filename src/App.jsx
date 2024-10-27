@@ -18,7 +18,7 @@ function App() {
   const [ingredientBox, setIngredientBox] = useState([]);
 
   const btntoggleING = (id, isChek) => {
-    console.log(ingredientBox)
+    console.log(ingredientBox);
     if (isChek) {
       setIngredientBox((item) => [...item, id]);
     } else {
@@ -43,7 +43,7 @@ function App() {
 
   const toggleCheck = (_id, value) => {
     dispatch({ type: ToggleBtn, payload: { id: _id, value } });
-    btntoggleING(_id,value)
+    btntoggleING(_id, value);
   };
 
   const selectAllBtn = () => {
@@ -80,7 +80,7 @@ function App() {
 
   const postMutation = (newTodo) =>
     postDataByCallback("https://api.sampleapis.com/coffee/iced", newTodo);
-  
+
   const { mutate } = useMutation(postMutation, {
     onSuccess: () => {
       queryClient.invalidateQueries("token");
@@ -103,8 +103,17 @@ function App() {
     mutate(newTodo);
   };
 
-  const handleDelete = (id) => {
-    deleteDataByCallback("https://api.sampleapis.com/coffee/iced", id);
+  const deleteMutation = (id) =>
+    deleteDataByCallback(`https://api.sampleapis.com/coffee/iced`,id);
+  const { mutate: Data } = useMutation(deleteMutation, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("token");
+    },
+  });
+
+  const deleteQuery = (id) => {
+    Data(id);
+    console.log(Data);
   };
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -235,7 +244,7 @@ function App() {
                 <p> {description}</p>
                 <p>{ingredients}</p>
                 <img src={image} alt={title} width="300" />
-                <button onClick={() => handleDelete(id)}>Delete</button>
+                <button onClick={() => deleteQuery(id)}>Delete</button>
               </li>
             );
           })}
