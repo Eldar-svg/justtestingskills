@@ -3,13 +3,14 @@ import "./App.css";
 import useToggleHook from "./useToggleHook";
 import { Outlet } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import useAxios from "./useAxios";
 import { Todocontext } from "./useReduceStates";
 import { useContext, useState } from "react";
 import Modal from "./Modal";
-import { useQuery, useQueryClient, useMutation } from "react-query";
+import useQueryFetch from "./useQueryFetch";
+
 function App() {
   const { state, dispatch } = useContext(Todocontext);
+  const {handlePost,deleteQuery,fethcAgain,isLoading,isError} =useQueryFetch()
 
   const ToggleBtn = "Toggle";
   const allSelectedBtn = "selectAllBtn";
@@ -59,62 +60,7 @@ function App() {
     dispatch({ type: DeleteSelected });
   };
 
-  const { getDataByCallback, postDataByCallback, deleteDataByCallback } =
-    useAxios();
-
-  function DataAxsios() {
-    getDataByCallback("https://api.sampleapis.com/coffee/iced");
-  }
-
-  const {
-    isLoading,
-    isError,
-    refetch: Refresh,
-  } = useQuery("token", DataAxsios, { enabled: false });
-
-  const fethcAgain = () => {
-    Refresh();
-  };
-
-  const queryClient = useQueryClient();
-
-  const postMutation = (newTodo) =>
-    postDataByCallback("https://api.sampleapis.com/coffee/iced", newTodo);
-
-  const { mutate } = useMutation(postMutation, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("token");
-    },
-  });
-
-  const handlePost = (e) => {
-    e.preventDefault();
-    const newTodo = {
-      id: crypto.randomUUID(),
-      title: inputState.title,
-      ingredients: inputState.ingredients
-        .split(",")
-        .map((ingredient) => ingredient.trim())
-        .filter((ingredient) => ingredient !== ""),
-      description: inputState.description,
-      image: inputState.img,
-    };
-
-    mutate(newTodo);
-  };
-
-  const deleteMutation = (id) =>
-    deleteDataByCallback(`https://api.sampleapis.com/coffee/iced`,id);
-  const { mutate: Data } = useMutation(deleteMutation, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("token");
-    },
-  });
-
-  const deleteQuery = (id) => {
-    Data(id);
-    console.log(Data);
-  };
+ 
 
   const [currentPage, setCurrentPage] = useState(1);
 
