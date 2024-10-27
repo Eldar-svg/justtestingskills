@@ -5,14 +5,8 @@ function useQueryFetch() {
     const {inputState } = useToggleHook({
         title: "",
         description: "",
-        fresh: "",
-        search: "",
         img: "",
-        ingredients: "",
-        openSearch: false,
-        openForm: false,
-        CloseModal: true,
-        OpenModal: false,
+        ingredients: ""
       });
   const queryClient = useQueryClient();
   const {
