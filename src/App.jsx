@@ -10,7 +10,8 @@ import useQueryFetch from "./useQueryFetch";
 
 function App() {
   const { state, dispatch } = useContext(Todocontext);
-  const {handlePost,deleteQuery,fethcAgain,isLoading,isError} =useQueryFetch()
+  const { handlePost, deleteQuery, fethcAgain, isLoading, isError } =
+    useQueryFetch();
 
   const ToggleBtn = "Toggle";
   const allSelectedBtn = "selectAllBtn";
@@ -59,8 +60,6 @@ function App() {
     e.preventDefault();
     dispatch({ type: DeleteSelected });
   };
-
- 
 
   const [currentPage, setCurrentPage] = useState(1);
 
