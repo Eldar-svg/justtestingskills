@@ -5,7 +5,7 @@ function Home() {
   return (
 
     <div className="App"><Root/>
-    Welcome to Café YOU! 
+    <div style={{width:"50%", margin:"auto" }}>Welcome to Café YOU! 
     
     Cafe YOU logo w RESTAURANTCafe YOU Hours: Monday to Saturday: 7:45 AM to 3:30 PM. Kitchen closes at 3 PM. If you are coming with a group of more than 6 people please make a reservation – 239-600-0966.     
     
@@ -28,7 +28,7 @@ function Home() {
     
     In Australia, cafés play a central role in people’s lifestyle. Its where people hang out, where they meet up with friends and have business meetings; before work, after a morning swim or working out, for breakfast, for lunch, a snack or just a coffee.
     
-    We hope Café YOU will become part of your neighborhood and lifestyle.</div>
+    We hope Café YOU will become part of your neighborhood and lifestyle.</div></div>
   )
 }
 
