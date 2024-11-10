@@ -1,13 +1,6 @@
 import useAxios from "./useAxios";
-import useToggleHook from "./useToggleHook";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 function useQueryFetch() {
-    const {inputState } = useToggleHook({
-        title: "",
-        description: "",
-        img: "",
-        ingredients: ""
-      });
   const queryClient = useQueryClient();
   const {
     isLoading,
@@ -30,7 +23,7 @@ function useQueryFetch() {
     },
   });
 
-  const handlePost = (e) => {
+  const handlePost = (inputState,e) => {
     e.preventDefault();
     const newTodo = {
       id: crypto.randomUUID(),
