@@ -7,6 +7,8 @@ import { Todocontext } from "./useReduceStates";
 import { useContext, useState } from "react";
 import Modal from "./Modal";
 import useQueryFetch from "./useQueryFetch";
+import usePages from "./usePages";
+
 
 function App() {
   const { state, dispatch } = useContext(Todocontext);
@@ -18,6 +20,8 @@ function App() {
   const DeleteSelected = "DeleteSelected";
 
   const [ingredientBox, setIngredientBox] = useState([]);
+
+
 
   const btntoggleING = (id, isChek) => {
     console.log(ingredientBox);
@@ -61,18 +65,9 @@ function App() {
     dispatch({ type: DeleteSelected });
   };
 
-  const [currentPage, setCurrentPage] = useState(1);
 
-  const itemsPerPage = 6;
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = state.todo.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(state.todo.length / itemsPerPage);
-  const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
-  const handleNextPage = (page) => {
-    setCurrentPage(page);
-  };
+ const {currentItems,pages,handleNextPage,totalPages,currentPage,containerRef} =usePages()
 
   const selectedIngrid = state.todo;
 
@@ -85,7 +80,7 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div ref={containerRef} className="App">
       <Root />
       <button onClick={toOpenModal}>Open</button>
       <Modal closeModal={toOpenModal} showModal={inputState.CloseModal}>
