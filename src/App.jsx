@@ -8,6 +8,9 @@ import { useContext, useState } from "react";
 import Modal from "./Modal";
 import useQueryFetch from "./useQueryFetch";
 import usePages from "./usePages";
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const { state, dispatch } = useContext(Todocontext);
@@ -73,16 +76,24 @@ function App() {
 
   const selectedIngrid = state.todo;
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
-  if (isError) {
-    return <div>Error occurred while fetching data</div>;
-  }
+
+ 
+
 
   return (
     <div ref={containerRef} className="App">
+    
+      <ToastContainer
+        stacked
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+      />
+
       <Root />
       <button onClick={toOpenModal}>Open</button>
       <Modal closeModal={toOpenModal} showModal={inputState.CloseModal}>
@@ -114,7 +125,9 @@ function App() {
           />
 
           <p>
-            <button type="submit">Add</button>
+            <button type="submit">
+              Add
+            </button>
           </p>
         </form>
       </Modal>
@@ -204,5 +217,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;
