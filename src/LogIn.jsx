@@ -42,7 +42,7 @@ function LogIn() {
   
       if (authenticatedUser.role === "admin") {
         navigate("/products");
-      }
+      } else { navigate("/products");}
     } else {
       alert("Incorrect login or password");
     }
