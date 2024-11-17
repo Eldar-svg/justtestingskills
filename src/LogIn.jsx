@@ -16,20 +16,33 @@ function LogIn() {
       password: "",
     },
   });
-  const truelogin = "admin";
-  const truepassword = "admin1";
+  const users = [
+    { login: "admin", password: "admin1", role: "admin" },
+    { login: "user", password: "user1", role: "user" },
+  ];
+  console.log(users.login)
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    setFocus("login"); // Устанавливаем фокус на поле "login"
+    setFocus("login");
   }, [setFocus]);
 
   const handlersub = (data) => {
-    if (truelogin === data.login && truepassword === data.password) {
+    const authenticatedUser = users.find(
+      (user) => user.login === data.login && user.password === data.password
+    );
+
+    if (authenticatedUser) {
+      
       localStorage.setItem("token", true);
-      localStorage.setItem("username", data.login);
-      navigate("/products");
+      localStorage.setItem("username", authenticatedUser.login);
+      localStorage.setItem("role", authenticatedUser.role);
+
+  
+      if (authenticatedUser.role === "admin") {
+        navigate("/products");
+      }
     } else {
       alert("Incorrect login or password");
     }
