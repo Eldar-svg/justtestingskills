@@ -14,15 +14,14 @@ import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const { state, dispatch } = useContext(Todocontext);
-  const { handlePost, deleteQuery, fethcAgain } =
-    useQueryFetch();
+  const { handlePost, deleteQuery, fethcAgain } = useQueryFetch();
 
   const ToggleBtn = "Toggle";
   const allSelectedBtn = "selectAllBtn";
   const DeleteSelected = "DeleteSelected";
 
   const [ingredientBox, setIngredientBox] = useState([]);
-
+  const logdata = localStorage.getItem("role");
   const btntoggleING = (id, isChek) => {
     console.log(ingredientBox);
     if (isChek) {
@@ -46,7 +45,6 @@ function App() {
   });
 
   const toCloseModal = () => inputToggle("CloseModal");
-
 
   const toggleCheck = (_id, value) => {
     dispatch({ type: ToggleBtn, payload: { id: _id, value } });
@@ -90,48 +88,54 @@ function App() {
       />
 
       <Root />
-      <button onClick={toCloseModal}>Add new coffee</button>
-      <Modal closeModal={toCloseModal} showModal={inputState.CloseModal}>
-        <form
-          onSubmit={(e) => {
-            handlePost(inputState, e);
-            handlerinput("title",'')
-            handlerinput("description",'')
-            handlerinput("ingredients",'')
-            toCloseModal();
-          }}
-        >
-          <p>Title:</p>
-          <input
-            value={inputState.title}
-            onChange={(e) => handlerinput("title", e.target.value)}
-            type="text"
-          />
-          <p>Description:</p>
-          <input
-            value={inputState.description}
-            onChange={(e) => handlerinput("description", e.target.value)}
-            type="text"
-          />
-          <p>Image:</p>
-          <input
-            type="url"
-            value={inputState.img}
-            onChange={(e) => addImg(e.target.value)}
-          />
+      {logdata === "admin" && (
+        <>
+          
+           <button onClick={toCloseModal}>Add new coffee</button>
+          <Modal closeModal={toCloseModal} showModal={inputState.CloseModal}>
+            <form
+              onSubmit={(e) => {
+                handlePost(inputState, e);
+                handlerinput("title", "");
+                handlerinput("description", "");
+                handlerinput("ingredients", "");
+                toCloseModal();
+              }}
+            >
+              <p>Title:</p>
+              <input
+                value={inputState.title}
+                onChange={(e) => handlerinput("title", e.target.value)}
+                type="text"
+              />
+              <p>Description:</p>
+              <input
+                value={inputState.description}
+                onChange={(e) => handlerinput("description", e.target.value)}
+                type="text"
+              />
+              <p>Image:</p>
+              <input
+                type="url"
+                value={inputState.img}
+                onChange={(e) => addImg(e.target.value)}
+              />
 
-          <p>Ingred:</p>
-          <input
-            value={inputState.ingredients}
-            onChange={(e) => handlerinput("ingredients", e.target.value)}
-            type="text"
-          />
+              <p>Ingred:</p>
+              <input
+                value={inputState.ingredients}
+                onChange={(e) => handlerinput("ingredients", e.target.value)}
+                type="text"
+              />
 
-          <p>
-            <button type="submit">Add</button>
-          </p>
-        </form>
-      </Modal>
+              <p>
+                <button type="submit">Add</button>
+              </p>
+            </form>
+          </Modal>
+          
+        </>
+      )}
 
       <div>
         <button onClick={() => inputToggle("openSearch")}>
