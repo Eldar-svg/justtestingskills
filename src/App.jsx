@@ -14,7 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const { state, dispatch } = useContext(Todocontext);
-  const { handlePost, deleteQuery, fethcAgain, isLoading, isError } =
+  const { handlePost, deleteQuery, fethcAgain } =
     useQueryFetch();
 
   const ToggleBtn = "Toggle";
@@ -45,7 +45,8 @@ function App() {
     OpenModal: false,
   });
 
-  const toOpenModal = () => inputToggle("CloseModal");
+  const toCloseModal = () => inputToggle("CloseModal");
+
 
   const toggleCheck = (_id, value) => {
     dispatch({ type: ToggleBtn, payload: { id: _id, value } });
@@ -76,14 +77,8 @@ function App() {
 
   const selectedIngrid = state.todo;
 
-
-
- 
-
-
   return (
     <div ref={containerRef} className="App">
-    
       <ToastContainer
         stacked
         position="top-right"
@@ -95,9 +90,17 @@ function App() {
       />
 
       <Root />
-      <button onClick={toOpenModal}>Open</button>
-      <Modal closeModal={toOpenModal} showModal={inputState.CloseModal}>
-        <form onSubmit={(e) => handlePost(inputState, e)}>
+      <button onClick={toCloseModal}>Add new coffee</button>
+      <Modal closeModal={toCloseModal} showModal={inputState.CloseModal}>
+        <form
+          onSubmit={(e) => {
+            handlePost(inputState, e);
+            handlerinput("title",'')
+            handlerinput("description",'')
+            handlerinput("ingredients",'')
+            toCloseModal();
+          }}
+        >
           <p>Title:</p>
           <input
             value={inputState.title}
@@ -125,16 +128,14 @@ function App() {
           />
 
           <p>
-            <button type="submit">
-              Add
-            </button>
+            <button type="submit">Add</button>
           </p>
         </form>
       </Modal>
 
       <div>
         <button onClick={() => inputToggle("openSearch")}>
-          {inputState.openSearch ? "close" : "open"}
+          {inputState.openSearch ? "close" : "Search bar"}
         </button>
         {inputState.openSearch ? (
           <input
@@ -217,6 +218,5 @@ function App() {
     </div>
   );
 }
-
 
 export default App;
