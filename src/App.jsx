@@ -90,8 +90,7 @@ function App() {
       <Root />
       {logdata === "admin" && (
         <>
-          
-           <button onClick={toCloseModal}>Add new coffee</button>
+          <button onClick={toCloseModal}>Add new coffee</button>
           <Modal closeModal={toCloseModal} showModal={inputState.CloseModal}>
             <form
               onSubmit={(e) => {
@@ -133,7 +132,6 @@ function App() {
               </p>
             </form>
           </Modal>
-          
         </>
       )}
 
@@ -163,7 +161,7 @@ function App() {
             checked={state.allSelected}
             onChange={selectAllBtn}
           />
-          <button onClick={deleteAll}>Clear</button>
+       {  logdata === "admin" && <button onClick={deleteAll}>Clear</button>}
         </label>
       </form>
       <Outlet />
@@ -194,18 +192,18 @@ function App() {
           })
           .map(({ id, title, description, ingredients, image, check }) => {
             return (
-              <li key={id}>
-                <input
-                  type="checkbox"
-                  checked={check}
-                  onChange={(e) => toggleCheck(id, e.target.checked)}
-                />
-                <NavLink to={`/products/${id}`}>{title}</NavLink>
-                <p> {description}</p>
-                <p>{ingredients}</p>
-                <img src={image} alt={title} width="300" />
-                <button onClick={() => deleteQuery(id)}>Delete</button>
-              </li>
+             <><li key={id}>
+             <input
+               type="checkbox"
+               checked={check}
+               onChange={(e) => toggleCheck(id, e.target.checked)}
+             />
+             <NavLink to={`/products/${id}`}>{title}</NavLink>
+             <p> {description}</p>
+             <p>{ingredients}</p>
+             <img src={image} alt={title} width="300" />
+             {logdata === "admin" && <button onClick={() => deleteQuery(id)}>Delete</button>}
+           </li></> 
             );
           })}
       </ul>
