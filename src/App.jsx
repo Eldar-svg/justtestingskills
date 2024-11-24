@@ -11,7 +11,7 @@ import usePages from "./usePages";
 import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
-import MainFunck from "./MainFunck";
+import MainFunck from "./mainstructure/MainFunck";
 
 function App() {
   const { state, dispatch } = useContext(Todocontext);
@@ -44,8 +44,6 @@ function App() {
     CloseModal: true,
     OpenModal: false,
   });
-
-
 
   const toCloseModal = () => inputToggle("CloseModal");
 
