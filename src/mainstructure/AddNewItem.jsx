@@ -1,33 +1,21 @@
 import React from "react";
 import Modal from "./Modal";
-import { useContext } from "react";
-import { Todocontext } from "./useReduceStates";
 
-function MainFunck({
-  inputToggle,
+function AddNewItem({
   handlePost,
   handlerinput,
   addImg,
   logdata,
   toCloseModal,
-  deleteAll,
-  fethcAgain,
   inputState,
-  selectAllBtn,
+  title,
+  description,
+  img,
+  ingredients,
+  CloseModal,
 }) {
-  const { state } = useContext(Todocontext);
-  const {
-    title,
-    description,
-    img,
-    search,
-    ingredients,
-    openSearch,
-    CloseModal,
-  } = inputState;
   return (
     <div>
-      {" "}
       {logdata === "admin" && (
         <>
           <button onClick={toCloseModal}>Add new coffee</button>
@@ -74,36 +62,8 @@ function MainFunck({
           </Modal>
         </>
       )}
-      <div>
-        <button onClick={() => inputToggle("openSearch")}>
-          {openSearch ? "close" : "Search bar"}
-        </button>
-        {openSearch ? (
-          <input
-            value={search}
-            onChange={(e) => handlerinput("search", e.target.value)}
-            type="text"
-            placeholder="enter the searchable text"
-          />
-        ) : null}
-      </div>
-      <button onClick={fethcAgain}>
-        {state.todo.length === 0 ? "Request Data" : "Refresh"}
-      </button>
-      <form>
-        <label htmlFor="d">
-          Choose All:
-          <input
-            type="checkbox"
-            id="d"
-            checked={state.allSelected}
-            onChange={selectAllBtn}
-          />
-          {logdata === "admin" && <button onClick={deleteAll}>Clear</button>}
-        </label>
-      </form>
     </div>
   );
 }
 
-export default MainFunck;
+export default AddNewItem;
