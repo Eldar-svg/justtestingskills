@@ -29,17 +29,12 @@ function MainFunck({
         toCloseModal={toCloseModal}
         deleteAll={deleteAll}
         fethcAgain={fethcAgain}
-        inputState={inputState}
         selectAllBtn={selectAllBtn}
         Modal={Modal}
-        {...inputState}
+        inputState= {inputState}
       />
       <div>
-        <SearchBar
-          handlerinput={handlerinput}
-          inputToggle={inputToggle}
-          {...inputState}
-        />
+        <SearchBar handlerinput={handlerinput} inputToggle={inputToggle} />
       </div>
       <button onClick={fethcAgain}>
         {state.todo.length === 0 ? "Request Data" : "Refresh"}

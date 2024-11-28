@@ -18,11 +18,11 @@ function AddNewItem({
           <button onClick={toCloseModal}>Add new coffee</button>
           <Modal closeModal={toCloseModal} showModal={CloseModal}>
             <InputofModal
-            toCloseModal={toCloseModal}
+              toCloseModal={toCloseModal}
               handlePost={handlePost}
               handlerinput={handlerinput}
               addImg={addImg}
-              {...inputState}
+              inputState= {inputState}
             />
           </Modal>
         </>
