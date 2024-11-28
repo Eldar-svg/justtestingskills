@@ -6,10 +6,8 @@ function InputofModal({
   addImg,
   inputState,
   toCloseModal,
-title,description,img,ingredients
 }) {
-
-
+  const { title, description, img, ingredients } = inputState;
   const onChangeInput = (input) => (e) => handlerinput(input, e.target.value);
 
   return (
