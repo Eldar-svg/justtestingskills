@@ -1,8 +1,8 @@
 import Root from "./Root";
 import "./App.css";
 import useToggleHook from "./useToggleHook";
-import { Outlet } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import { Outlet, NavLink } from "react-router-dom";
+
 import { Todocontext } from "./useReduceStates";
 import { useContext, useState } from "react";
 
@@ -12,6 +12,7 @@ import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 import MainFunck from "./mainstructure/MainFunck";
+import CheckboxIng from "./mainstructure/CheckboxIng";
 
 function App() {
   const { state, dispatch } = useContext(Todocontext);
@@ -22,9 +23,9 @@ function App() {
   const DeleteSelected = "DeleteSelected";
 
   const [ingredientBox, setIngredientBox] = useState([]);
+
   const logdata = localStorage.getItem("role");
   const btntoggleING = (id, isChek) => {
-    console.log(ingredientBox);
     if (isChek) {
       setIngredientBox((item) => [...item, id]);
     } else {
@@ -44,8 +45,6 @@ function App() {
     CloseModal: true,
     OpenModal: false,
   });
-
-  const toCloseModal = () => inputToggle("CloseModal");
 
   const toggleCheck = (_id, value) => {
     dispatch({ type: ToggleBtn, payload: { id: _id, value } });
@@ -73,7 +72,7 @@ function App() {
     currentPage,
     containerRef,
   } = usePages();
-
+  const toCloseModal = () => inputToggle("CloseModal")
   const selectedIngrid = state.todo;
 
   return (
@@ -102,16 +101,7 @@ function App() {
         inputState={inputState}
       />
       <Outlet />
-      {selectedIngrid.map(({ id, ingredients, check }) => (
-        <p style={{ display: "flex", width: "30%", margin: "auto" }} key={id}>
-          <input
-            checked={check}
-            onChange={(e) => toggleCheck(id, e.target.checked)}
-            type="checkbox"
-          />
-          {`${ingredients}`}
-        </p>
-      ))}
+      <CheckboxIng toggleCheck={toggleCheck} selectedIngrid={selectedIngrid} />
       <ul
         style={{
           display: "flexbox",
