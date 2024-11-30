@@ -9,14 +9,15 @@ function AddNewItem({
   logdata,
   toCloseModal,
   inputState,
-  CloseModal,
+
 }) {
+  
   return (
     <div>
       {logdata === "admin" && (
         <>
           <button onClick={toCloseModal}>Add new coffee</button>
-          <Modal closeModal={toCloseModal} showModal={CloseModal}>
+          <Modal closeModal={toCloseModal} showModal={inputState.CloseModal}>
             <InputofModal
               toCloseModal={toCloseModal}
               handlePost={handlePost}
