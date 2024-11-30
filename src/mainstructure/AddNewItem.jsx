@@ -9,9 +9,7 @@ function AddNewItem({
   logdata,
   toCloseModal,
   inputState,
-
 }) {
-  
   return (
     <div>
       {logdata === "admin" && (
@@ -23,7 +21,7 @@ function AddNewItem({
               handlePost={handlePost}
               handlerinput={handlerinput}
               addImg={addImg}
-              inputState= {inputState}
+              inputState={inputState}
             />
           </Modal>
         </>
