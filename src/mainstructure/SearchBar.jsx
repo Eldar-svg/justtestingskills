@@ -1,7 +1,7 @@
 import React from 'react'
 
-function SearchBar({openSearch,inputToggle,handlerinput,search}) {
-    
+function SearchBar({inputToggle,handlerinput,search,inputState}) {
+    const {openSearch}=inputState
   return (
     <div><button onClick={() => inputToggle("openSearch")}>
     {openSearch ? "close" : "Search bar"}
