@@ -34,7 +34,7 @@ function MainFunck({
         inputState= {inputState}
       />
       <div>
-        <SearchBar handlerinput={handlerinput} inputToggle={inputToggle} />
+        <SearchBar inputState ={inputState} handlerinput={handlerinput} inputToggle={inputToggle} />
       </div>
       <button onClick={fethcAgain}>
         {state.todo.length === 0 ? "Request Data" : "Refresh"}
