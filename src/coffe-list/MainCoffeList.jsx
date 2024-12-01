@@ -7,40 +7,37 @@ function MainCoffeList({
   deleteQuery,
   toggleCheck,
   ingredientBox,
-  currentItems
+  currentItems,
 }) {
-   
+  const searchItems = (data) => {
+    const searchUpperCase = inputState.search.toLowerCase();
+
+    const matchesSearch = data.title.toLowerCase().includes(searchUpperCase);
+
+    const matchesIngredient =
+      ingredientBox.length === 0 || ingredientBox.includes(data.id);
+    return matchesSearch && matchesIngredient;
+  };
+
   return (
     <div>
       {currentItems
         .filter((prevSearch) => {
-          const searchUpperCase = inputState.search.toLowerCase();
-
-          const matchesSearch = prevSearch.title
-            .toLowerCase()
-            .includes(searchUpperCase);
-
-          const matchesIngredient =
-            ingredientBox.length === 0 || ingredientBox.includes(prevSearch.id);
-
-          return matchesSearch && matchesIngredient; // Показываем только те элементы, которые соответствуют поисковому запросу и выбранным ингредиентам
+          return searchItems(prevSearch);
         })
         .map(({ id, title, description, ingredients, image, check }) => {
           return (
             <>
               <ul
                 style={{
-                  display: "flexbox",
-                  gap: "50px",
-
-                  margin: "auto",
                   listStyle: "none",
-                  marginTop: "50px",
-
-                  alignItems: "stretch",
+                  marginTop: "100px",
                 }}
               >
-                <li style={{ width: "50%" }} key={id}>
+                <li
+                  style={{ gap: "50px", margin: "auto", width: "50%" }}
+                  key={id}
+                >
                   <input
                     type="checkbox"
                     checked={check}
