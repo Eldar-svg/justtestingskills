@@ -1,18 +1,17 @@
 import Root from "./Root";
 import "./App.css";
 import useToggleHook from "./useToggleHook";
-import { Outlet, NavLink } from "react-router-dom";
-
+import { Outlet } from "react-router-dom";
 import { Todocontext } from "./useReduceStates";
 import { useContext, useState } from "react";
-
 import useQueryFetch from "./useQueryFetch";
 import usePages from "./usePages";
 import { ToastContainer } from "react-toastify";
-
 import "react-toastify/dist/ReactToastify.css";
 import MainFunck from "./mainstructure/MainFunck";
 import CheckboxIng from "./mainstructure/CheckboxIng";
+import MainCoffeList from "./coffe-list/MainCoffeList";
+import Pages from "./coffe-list/Pages";
 
 function App() {
   const { state, dispatch } = useContext(Todocontext);
@@ -65,14 +64,15 @@ function App() {
   };
 
   const {
-    currentItems,
-    pages,
+    containerRef,
     handleNextPage,
+    pages,
     totalPages,
     currentPage,
-    containerRef,
+    currentItems,
   } = usePages();
-  const toCloseModal = () => inputToggle("CloseModal")
+
+  const toCloseModal = () => inputToggle("CloseModal");
   const selectedIngrid = state.todo;
 
   return (
@@ -102,76 +102,22 @@ function App() {
       />
       <Outlet />
       <CheckboxIng toggleCheck={toggleCheck} selectedIngrid={selectedIngrid} />
-      <ul
-        style={{
-          display: "flexbox",
-          gap: "50px",
 
-          margin: "auto",
-          listStyle: "none",
-          marginTop: "50px",
+      <MainCoffeList
+        inputState={inputState}
+        logdata={logdata}
+        deleteQuery={deleteQuery}
+        toggleCheck={toggleCheck}
+        ingredientBox={ingredientBox}
+        currentItems={currentItems}
+      />
 
-          alignItems: "stretch",
-        }}
-      >
-        {currentItems
-          .filter((prevSearch) => {
-            const searchUpperCase = inputState.search.toLowerCase();
-
-            const matchesSearch = prevSearch.title
-              .toLowerCase()
-              .includes(searchUpperCase);
-
-            const matchesIngredient =
-              ingredientBox.length === 0 ||
-              ingredientBox.includes(prevSearch.id);
-
-            return matchesSearch && matchesIngredient; // Показываем только те элементы, которые соответствуют поисковому запросу и выбранным ингредиентам
-          })
-          .map(({ id, title, description, ingredients, image, check }) => {
-            return (
-              <>
-                <li style={{ width: "50%" }} key={id}>
-                  <input
-                    type="checkbox"
-                    checked={check}
-                    onChange={(e) => toggleCheck(id, e.target.checked)}
-                  />
-                  <NavLink to={`/products/${id}`}>{title}</NavLink>
-                  <p> {description}</p>
-                  <p>{ingredients}</p>
-                  <img
-                    style={{
-                      width: "300px",
-                      height: "300px",
-                    }}
-                    src={image}
-                    alt={title}
-                    width="300"
-                  />
-                  {logdata === "admin" && (
-                    <button
-                      style={{ display: "flex" }}
-                      onClick={() => deleteQuery(id)}
-                    >
-                      Delete
-                    </button>
-                  )}
-                </li>
-              </>
-            );
-          })}
-      </ul>
-      {pages.map((pages) => (
-        <button onClick={() => handleNextPage(pages)} key={pages}>
-          {pages}
-        </button>
-      ))}
-      {totalPages > 0 ? (
-        <p>
-          Page {currentPage} of {totalPages}
-        </p>
-      ) : null}
+      <Pages
+        totalPages={totalPages}
+        pages={pages}
+        handleNextPage={handleNextPage}
+        currentPage={currentPage}
+      />
     </div>
   );
 }
