@@ -17,12 +17,10 @@ import useFetchHooks from "./hooks/useFetchHooks";
 function App() {
   const { state } = useContext(Todocontext);
   const { handlePost, deleteQuery, fethcAgain } = useQueryFetch();
-  const { toggleCheck, selectAllBtn, deleteAll, ingredientBox } =
+  const { toggleCheck, selectAllBtn, deleteAll, ingredientBox,addImg} =
     useFetchHooks();
 
-  const addImg = (file) => {
-    handlerinput("img", file);
-  };
+ 
 
   const logdata = localStorage.getItem("role");
 
@@ -31,7 +29,6 @@ function App() {
     description: "",
     fresh: "",
     search: "",
-    img: "",
     ingredients: "",
     openSearch: false,
     openForm: false,
