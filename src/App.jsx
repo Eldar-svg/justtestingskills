@@ -3,7 +3,7 @@ import "./App.css";
 import useToggleHook from "./useToggleHook";
 import { Outlet } from "react-router-dom";
 import { Todocontext } from "./useReduceStates";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import useQueryFetch from "./useQueryFetch";
 import usePages from "./usePages";
 import { ToastContainer } from "react-toastify";
@@ -12,25 +12,19 @@ import MainFunck from "./mainstructure/MainFunck";
 import CheckboxIng from "./mainstructure/CheckboxIng";
 import MainCoffeList from "./coffe-list/MainCoffeList";
 import Pages from "./coffe-list/Pages";
+import useFetchHooks from "./hooks/useFetchHooks";
 
 function App() {
-  const { state, dispatch } = useContext(Todocontext);
+  const { state } = useContext(Todocontext);
   const { handlePost, deleteQuery, fethcAgain } = useQueryFetch();
+  const { toggleCheck, selectAllBtn, deleteAll, ingredientBox } =
+    useFetchHooks();
 
-  const ToggleBtn = "Toggle";
-  const allSelectedBtn = "selectAllBtn";
-  const DeleteSelected = "DeleteSelected";
-
-  const [ingredientBox, setIngredientBox] = useState([]);
+  const addImg = (file) => {
+    handlerinput("img", file);
+  };
 
   const logdata = localStorage.getItem("role");
-  const btntoggleING = (id, isChek) => {
-    if (isChek) {
-      setIngredientBox((item) => [...item, id]);
-    } else {
-      setIngredientBox((item) => item.filter((_id) => _id !== id));
-    }
-  };
 
   const { inputToggle, inputState, handlerinput } = useToggleHook({
     title: "",
@@ -44,24 +38,6 @@ function App() {
     CloseModal: true,
     OpenModal: false,
   });
-
-  const toggleCheck = (_id, value) => {
-    dispatch({ type: ToggleBtn, payload: { id: _id, value } });
-    btntoggleING(_id, value);
-  };
-
-  const selectAllBtn = () => {
-    dispatch({ type: allSelectedBtn });
-  };
-
-  const addImg = (file) => {
-    handlerinput("img", file);
-  };
-
-  const deleteAll = (e) => {
-    e.preventDefault();
-    dispatch({ type: DeleteSelected });
-  };
 
   const {
     containerRef,
