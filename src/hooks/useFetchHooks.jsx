@@ -2,7 +2,9 @@ import { useContext, useState } from "react";
 import { Todocontext } from "../useReduceStates";
 import useToggleHook from "../useToggleHook";
 function useFetchHooks() {
-  const {  handlerinput } = useToggleHook()
+  const {  handlerinput } = useToggleHook(
+    {img: ""}
+  )
 
   const { dispatch } = useContext(Todocontext);
   const [ingredientBox, setIngredientBox] = useState([]);
