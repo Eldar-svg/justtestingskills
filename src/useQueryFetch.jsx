@@ -72,15 +72,16 @@ function useQueryFetch() {
 
   const handlePost = (inputState, e) => {
     e.preventDefault();
+    const {title,ingredients,description,img} = inputState
     const newTodo = {
       id: crypto.randomUUID(),
-      title: inputState.title,
-      ingredients: inputState.ingredients
+      title: title,
+      ingredients: ingredients
         .split(",")
         .map((ingredient) => ingredient.trim())
         .filter((ingredient) => ingredient !== ""),
-      description: inputState.description,
-      image: inputState.img,
+      description: description,
+      image: img,
     };
     newData(newTodo);
   };
