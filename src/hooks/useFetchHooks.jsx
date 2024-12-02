@@ -2,9 +2,7 @@ import { useContext, useState } from "react";
 import { Todocontext } from "../useReduceStates";
 import useToggleHook from "../useToggleHook";
 function useFetchHooks() {
-  const {  handlerinput } = useToggleHook(
-    {img: ""}
-  )
+  const {  handlerinput } = useToggleHook()
 
   const { dispatch } = useContext(Todocontext);
   const [ingredientBox, setIngredientBox] = useState([]);
@@ -12,9 +10,7 @@ function useFetchHooks() {
   const allSelectedBtn = "selectAllBtn";
   const DeleteSelected = "DeleteSelected";
 
-  const addImg = (file) => {
-    handlerinput("img", file);
-  };
+  
 
   const btntoggleING = (id, isChek) => {
     if (isChek) {
@@ -24,9 +20,14 @@ function useFetchHooks() {
     }
   };
 
+
   const toggleCheck = (_id, value) => {
     dispatch({ type: ToggleBtn, payload: { id: _id, value } });
     btntoggleING(_id, value);
+  };
+
+  const addImg = (file) => {
+    handlerinput("img", file);
   };
 
   const selectAllBtn = () => {

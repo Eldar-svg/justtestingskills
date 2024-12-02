@@ -28,6 +28,7 @@ function App() {
     title: "",
     description: "",
     fresh: "",
+    img: "",
     search: "",
     ingredients: "",
     openSearch: false,
