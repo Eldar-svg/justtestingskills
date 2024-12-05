@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import App from "./App";
 import Home from "./Home";
-import UseReduceStates from "./useReduceStates";
+import UseReduceStates from "./hooks/useReduceStates";
 import LogIn from "./LogIn";
 import reportWebVitals from "./reportWebVitals";
 import SinglePage from "./SinglePage";
