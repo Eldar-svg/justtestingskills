@@ -8,10 +8,10 @@ import useQueryFetch from "./hooks/useQueryFetch";
 import usePages from "./hooks/usePages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import MainFunck from "./mainstructure/Products/MainFunck";
-import CheckboxIng from "./mainstructure/Products/CheckboxIng";
-import MainCoffeList from "./coffe-list/MainCoffeList";
-import Pages from "./coffe-list/Pages";
+import MainFunck from "./mainstructure/Products/Produt/MainFunck";
+import CheckboxIng from "./mainstructure/Products/Produt/CheckboxIng";
+import MainCoffeList from "./mainstructure/Products/coffe-list/MainCoffeList";
+import Pages from "./mainstructure/Products/coffe-list/Pages";
 import useFetchHooks from "./hooks/useFetchHooks";
 
 function App() {
