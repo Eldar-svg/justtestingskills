@@ -1,5 +1,5 @@
 import React from "react";
-
+import Inputs from "./Inputs";
 function InputofModal({
   handlePost,
   handlerinput,
@@ -21,31 +21,14 @@ function InputofModal({
           toCloseModal();
         }}
       >
-        <p>Title:</p>
-        <input value={title} onChange={onChangeInput("title")} type="text" />
-        <p>Description:</p>
-        <input
-          value={description}
-          onChange={onChangeInput("description")}
-          type="text"
+        <Inputs
+          onChangeInput={onChangeInput}
+          addImg={addImg}
+          title={title}
+          description={description}
+          ingredients={ingredients}
+          img={img}
         />
-        <p>Image:</p>
-        <input
-          type="url"
-          value={img}
-          onChange={(e) => addImg(e.target.value)}
-        />
-
-        <p>Ingred:</p>
-        <input
-          value={ingredients}
-          onChange={onChangeInput("ingredients")}
-          type="text"
-        />
-
-        <p>
-          <button type="submit">Add</button>
-        </p>
       </form>
     </div>
   );
