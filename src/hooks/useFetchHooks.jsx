@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
-import { Todocontext } from "../useReduceStates";
-import useToggleHook from "../useToggleHook";
+import { Todocontext } from "./useReduceStates";
+import useToggleHook from "./useToggleHook";
 function useFetchHooks() {
   const {  handlerinput } = useToggleHook()
 
