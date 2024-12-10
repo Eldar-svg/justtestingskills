@@ -1,4 +1,5 @@
 import EachCoffe from "./EachCoffe";
+
 function MainCoffeList({
   inputState,
   logdata,
@@ -26,7 +27,14 @@ function MainCoffeList({
         .map((coffe) => {
           return (
             <>
-              <EachCoffe {...coffe} logdata={logdata} deleteQuery={deleteQuery} toggleCheck={toggleCheck}/>
+              <EachCoffe
+                {...coffe}
+                check={coffe.check}
+                key={coffe.key}
+                logdata={logdata}
+                deleteQuery={deleteQuery}
+                toggleCheck={toggleCheck}
+              />
             </>
           );
         })}
