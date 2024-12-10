@@ -1,58 +1,32 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import ErrorPage from "./error-page";
-import {
-  createBrowserRouter,
-  Navigate,
-  RouterProvider,
-} from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
 import App from "./App";
-import Home from "./Home";
 import UseReduceStates from "./hooks/useReduceStates";
-import LogIn from "./LogIn";
 import reportWebVitals from "./reportWebVitals";
-import SinglePage from "./SinglePage";
-import { QueryClientProvider, QueryClient } from "react-query";
+import { QueryClientProvider } from "react-query";
+import useRouting from "./Routing";
 
-const ProtectedRoute = ({ element }) => {
-  const isAuth = localStorage.getItem("token");
-  return isAuth ? element : <Navigate to="/login" />;
+const Main = () => {
+  const { clientQ, router } = useRouting(); // Хук вызывается внутри компонента
+  return (
+    <QueryClientProvider client={clientQ}>
+      <UseReduceStates>
+        <RouterProvider router={router}>
+          <App />
+        </RouterProvider>
+      </UseReduceStates>
+    </QueryClientProvider>
+  );
 };
 
-const clientQ = new QueryClient()
-
-const router = createBrowserRouter([
-  {
-    path: "/login",
-    element: <LogIn />,
-    errorElement: <ErrorPage />,
-  },
-
-  {
-    path: "/",
-    element: <ProtectedRoute element={<Home />} />,
-  },
-
-  {
-    path: "/products",
-    element: <ProtectedRoute element={<App />} />,
-  },
-  {
-    path: "/products/:id",
-    element: <ProtectedRoute element={<SinglePage />} />,
-  },
-]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
   <React.StrictMode>
-    <QueryClientProvider client={clientQ}><UseReduceStates>
-      <RouterProvider router={router}>
-        <App />
-      </RouterProvider>
-    </UseReduceStates></QueryClientProvider>
-    
+ <Main/>
   </React.StrictMode>
 );
 
