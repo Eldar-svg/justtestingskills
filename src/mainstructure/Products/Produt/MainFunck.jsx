@@ -1,6 +1,6 @@
 import React from "react";
 import { useContext } from "react";
-import { Todocontext } from "../../../hooks/useReduceStates";
+import { Todocontext } from "../../../hooks/useReduceStates"
 import AddNewItem from "./AddNewItem";
 import SearchBar from "./SearchBar";
 
