@@ -1,32 +1,54 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Root from "./Root";
 import axios from "axios";
-
+import EachCoffe from "./mainstructure/Products/coffe-list/EachCoffe";
+import { DataContext } from "./App"; // Импорт контекста
 const ProductPage = () => {
   const { id } = useParams(); // получаем id из URL
-  const [product, setProduct] = useState([]);
+  const [product, setProduct] = useState(null);
 
-  const { title, description, ingredients, image } = product;
-
+  // Использование контекста
+  const { check,logdata, deleteQuery, toggleCheck } = useContext(DataContext);
   useEffect(() => {
     const fetchProduct = async () => {
-      const response = await axios.get(
-        `https://api.sampleapis.com/coffee/iced/${id}`
-      );
-      setProduct(response.data);
+      try {
+        const { data } = await axios.get(
+          `https://api.sampleapis.com/coffee/iced/${id}`
+        );
+        setProduct(data);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
     };
 
     fetchProduct();
-  }, [id]); // перезагружаем данные при изменении id
+  }, [id]);
+  // Проверяем, что product существует перед деструктуризацией
+  if (!product) {
+    return <div>Loading...</div>; // Показываем сообщение загрузки, пока данные не получены
+  }
+
+  const { title, description, ingredients, image } = product;
 
   return (
     <div className="App">
       <Root />
       <h1>{title}</h1>
-      <h1>{description} </h1>
-      <img src={`${image}`} alt={`${title}`} width="500" />
+      <h2>{description}</h2>
+      <img src={image} alt={title} width="500" />
       <p>{ingredients}</p>
+      <EachCoffe
+       id={id}
+        title={title}
+        description={description}
+        ingredients={ingredients}
+        image={image}
+        logdata={logdata}
+        deleteQuery={deleteQuery}
+        toggleCheck={toggleCheck}
+        check={check}
+      />
     </div>
   );
 };
