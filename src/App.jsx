@@ -3,7 +3,7 @@ import "./App.css";
 import useToggleHook from "./hooks/useToggleHook";
 import { Outlet } from "react-router-dom";
 import { Todocontext } from "./hooks/useReduceStates";
-import { useContext } from "react";
+import { useContext, createContext } from "react";
 import useQueryFetch from "./hooks/useQueryFetch";
 import usePages from "./hooks/usePages";
 import { ToastContainer } from "react-toastify";
@@ -13,11 +13,16 @@ import CheckboxIng from "./mainstructure/Products/Produt/CheckboxIng";
 import MainCoffeList from "./mainstructure/Products/coffe-list/MainCoffeList";
 import Pages from "./mainstructure/Products/coffe-list/Pages";
 import useFetchHooks from "./hooks/useFetchHooks";
-
+export const DataContext = createContext({
+  check: [], 
+  logdata: null, 
+  deleteQuery: null, 
+  toggleCheck: () => {}
+});                                            
 function App() {
   const { state } = useContext(Todocontext);
   const { handlePost, deleteQuery, fethcAgain } = useQueryFetch();
-  const { toggleCheck, selectAllBtn, deleteAll, ingredientBox,addImg} =
+  const { check, toggleCheck, selectAllBtn, deleteAll, ingredientBox,addImg} =
     useFetchHooks();
 
  
@@ -74,7 +79,15 @@ function App() {
         deleteAll={deleteAll}
         inputState={inputState}
       />
-      <Outlet />
+       <DataContext.Provider
+  value={{
+    check,
+    logdata,
+    deleteQuery,
+    toggleCheck,
+  }}
+>
+      <Outlet /></DataContext.Provider>
       <CheckboxIng toggleCheck={toggleCheck} selectedIngrid={selectedIngrid} />
 
       <MainCoffeList
