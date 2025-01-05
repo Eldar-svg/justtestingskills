@@ -30,7 +30,7 @@ function MainCoffeList({
               <EachCoffe
                 {...coffe}
                 check={coffe.check}
-                key={coffe.key}
+                key={coffe.id}
                 logdata={logdata}
                 deleteQuery={deleteQuery}
                 toggleCheck={toggleCheck}
