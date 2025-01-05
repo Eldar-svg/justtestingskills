@@ -7,26 +7,27 @@ import UseReduceStates from "./hooks/useReduceStates";
 import reportWebVitals from "./reportWebVitals";
 import { QueryClientProvider } from "react-query";
 import useRouting from "./Routing";
-
+import ToastProvider from "./hooks/useToast";
 const Main = () => {
   const { clientQ, router } = useRouting(); // Хук вызывается внутри компонента
   return (
     <QueryClientProvider client={clientQ}>
-      <UseReduceStates>
-        <RouterProvider router={router}>
-          <App />
-        </RouterProvider>
-      </UseReduceStates>
+      <ToastProvider>
+        <UseReduceStates>
+          <RouterProvider router={router}>
+            <App />
+          </RouterProvider>
+        </UseReduceStates>
+      </ToastProvider>
     </QueryClientProvider>
   );
 };
-
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <React.StrictMode>
- <Main/>
+    <Main />
   </React.StrictMode>
 );
 
