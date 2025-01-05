@@ -1,115 +1,109 @@
 import useAxios from "./useAxios";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { toast } from "react-toastify";
-import React from "react";
+import { useContext, useRef } from "react";
+import { ToastContext } from "./useToast";
 
 function useQueryFetch() {
-  const toastId = React.useRef(null);
+  const { dispatch, triggerToast, toastActionTypes } = useContext(ToastContext);
   const queryClient = useQueryClient();
-  const { getDataByCallback, postDataByCallback, deleteDataByCallback } =
-    useAxios();
+  const { getData, postData, deleteData } = useAxios();
 
+  const isFetching = useRef(false);
+
+  // Устанавливаем enabled: false для ручного вызова запроса через refetch
   const {
     isLoading,
     isError,
     refetch: Refresh,
   } = useQuery("token", DataAxsios, {
-    enabled: false,
+    enabled: false, // Не запускается автоматически
+
     onSuccess: () => {
-      if (toastId.current) {
-        toast.update(toastId.current, {
-          render: "Данные загружены!",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-        });
-      }
+      console.log("Data successfully fetched");
+      dispatch({ type: toastActionTypes.SUCCESS });
     },
     onError: () => {
-      if (toastId.current) {
-        toast.update(toastId.current, {
-          render: "Ошибка загрузки данных",
-          type: "error",
-          isLoading: false,
-          autoClose: 5000,
-        });
-      }
+      dispatch({ type: toastActionTypes.ERROR });
     },
   });
 
+  // Функция для получения данных
   function DataAxsios() {
-    return getDataByCallback("https://api.sampleapis.com/coffee/iced");
+    return getData("https://api.sampleapis.com/coffee/iced");
   }
 
-  const postMutation = (newTodo) =>
-    postDataByCallback("https://api.sampleapis.com/coffee/iced", newTodo);
-
-  const { mutate: newData } = useMutation(postMutation, {
-    onMutate: () => {
-      toastId.current = toast.loading("Добавление...");
-    },
-    onSuccess: () => {
-      if (toastId.current) {
-        toast.update(toastId.current, {
-          render: "Данные успешно добавлены!",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
+  // Функция для добавления данных
+  const { mutate: addData } = useMutation(
+    (newTodo) => postData("https://api.sampleapis.com/coffee/iced", newTodo),
+    {
+      onMutate: () => {
+        triggerToast("Adding data...");
+      },
+      onSuccess: () => {
+        dispatch({ type: toastActionTypes.ADDED });
+        queryClient.invalidateQueries("token");
+      },
+      onError: (error) => {
+        dispatch({
+          type: toastActionTypes.ERROR_ADDED,
+          payload: { message: error.message },
         });
-      }
-    },
-    onError: (error) => {
-      if (toastId.current) {
-        toast.update(toastId.current, {
-          render: `Ошибка: ${error.message}`,
-          type: "error",
-          isLoading: false,
-          autoClose: 5000,
-        });
-      }
-    },
-  });
+      },
+    }
+  );
 
+  // Функция для удаления данных
+  const { mutate: deleteItem } = useMutation(
+    (id) => deleteData(`https://api.sampleapis.com/coffee/iced`, id),
+    {
+      onSuccess: () => {
+        toast.success("Deleted successfully!");
+        queryClient.invalidateQueries("token");
+      },
+      onError: (error) => {
+        toast.error(`Failed to delete: ${error.message}`);
+      },
+    }
+  );
+
+  // Обработчик для добавления данных
   const handlePost = (inputState, e) => {
-    e.preventDefault();
-    const {title,ingredients,description,img} = inputState
+    if (e) e.preventDefault();
+    const { title, ingredients, description, img } = inputState;
     const newTodo = {
       id: crypto.randomUUID(),
-      title: title,
+      title,
       ingredients: ingredients
         .split(",")
         .map((ingredient) => ingredient.trim())
         .filter((ingredient) => ingredient !== ""),
-      description: description,
+      description,
       image: img,
     };
-    newData(newTodo);
+    addData(newTodo);
   };
 
-  const deleteMutation = (id) =>
-    deleteDataByCallback(`https://api.sampleapis.com/coffee/iced`, id);
-
-  const { mutate: Data } = useMutation(deleteMutation, {
-    onSuccess: () => {
-      toast.success("Успешно удалено!");
-      queryClient.invalidateQueries("token");
-    },
-  });
-
+  // Обработчик для удаления данных
   const deleteQuery = (id) => {
-    Data(id);
+    deleteItem(id);
   };
 
-  const fethcAgain = () => {
-    toastId.current = toast.loading("Загрузка данных...");
-    Refresh();
+  // Функция для перезагрузки данных
+  const fetchAgain = async () => {
+    if (isFetching.current) return; // Если запрос уже выполняется, не запускаем повторно
+    isFetching.current = true;
+
+    triggerToast("Refreshing data...");
+    await Refresh();
+    isFetching.current = false;
   };
 
   return {
     DataAxsios,
     handlePost,
     deleteQuery,
-    fethcAgain,
+    fetchAgain,
     isLoading,
     isError,
   };
