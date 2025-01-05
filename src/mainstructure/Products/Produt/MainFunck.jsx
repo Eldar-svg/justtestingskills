@@ -1,8 +1,10 @@
 import React from "react";
 import { useContext } from "react";
-import { Todocontext } from "../../../hooks/useReduceStates"
+import { Todocontext } from "../../../hooks/useReduceStates";
 import AddNewItem from "./AddNewItem";
 import SearchBar from "./SearchBar";
+
+import useQueryFetch from "../../../hooks/useQueryFetch";
 
 function MainFunck({
   inputToggle,
@@ -13,11 +15,13 @@ function MainFunck({
   logdata,
   toCloseModal,
   deleteAll,
-  fethcAgain,
+  fetchAgain,
   inputState,
   selectAllBtn,
 }) {
   const { state } = useContext(Todocontext);
+
+  const { isLoading } = useQueryFetch();
 
   return (
     <div>
@@ -28,15 +32,18 @@ function MainFunck({
         logdata={logdata}
         toCloseModal={toCloseModal}
         deleteAll={deleteAll}
-        fethcAgain={fethcAgain}
         selectAllBtn={selectAllBtn}
         Modal={Modal}
-        inputState= {inputState}
+        inputState={inputState}
       />
       <div>
-        <SearchBar inputState ={inputState} handlerinput={handlerinput} inputToggle={inputToggle} />
+        <SearchBar
+          inputState={inputState}
+          handlerinput={handlerinput}
+          inputToggle={inputToggle}
+        />
       </div>
-      <button onClick={fethcAgain}>
+      <button onClick={fetchAgain} disabled={isLoading}>
         {state.todo.length === 0 ? "Request Data" : "Refresh"}
       </button>
       <form>
