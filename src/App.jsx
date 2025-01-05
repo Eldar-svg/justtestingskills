@@ -21,7 +21,7 @@ export const DataContext = createContext({
 });                                            
 function App() {
   const { state } = useContext(Todocontext);
-  const { handlePost, deleteQuery, fethcAgain } = useQueryFetch();
+  const { handlePost, deleteQuery, fetchAgain } = useQueryFetch();
   const { check, toggleCheck, selectAllBtn, deleteAll, ingredientBox,addImg} =
     useFetchHooks();
 
@@ -75,7 +75,7 @@ function App() {
         selectAllBtn={selectAllBtn}
         logdata={logdata}
         toCloseModal={toCloseModal}
-        fethcAgain={fethcAgain}
+        fetchAgain={fetchAgain}
         deleteAll={deleteAll}
         inputState={inputState}
       />
