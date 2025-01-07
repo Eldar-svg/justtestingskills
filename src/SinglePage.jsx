@@ -34,10 +34,7 @@ const ProductPage = () => {
   return (
     <div className="App">
       <Root />
-      <h1>{title}</h1>
-      <h2>{description}</h2>
-      <img src={image} alt={title} width="500" />
-      <p>{ingredients}</p>
+ 
       <EachCoffe
        id={id}
         title={title}
