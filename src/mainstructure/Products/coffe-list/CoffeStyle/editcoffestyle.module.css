@@ -1,0 +1,76 @@
+/* Основной стиль страницы */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f9f9f9;
+    color: #333;
+  }
+  
+  /* Заголовок */
+  h1 {
+    text-align: center;
+    color: #000000;
+    margin-bottom: 20px;
+  }
+  
+  /* Стили формы */
+  form {
+    max-width: 500px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Форм-группы */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  input, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  textarea {
+    resize: vertical;
+  }
+  
+  /* Кнопка */
+  button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Сообщения об ошибках и загрузке */
+  .error {
+    color: red;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  p {
+    text-align: center;
+  }
+  
