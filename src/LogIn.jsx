@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
@@ -42,7 +42,7 @@ function LogIn() {
   
       if (authenticatedUser.role === "admin") {
         navigate("/products");
-      } else { navigate("/products");}
+      } 
     } else {
       alert("Incorrect login or password");
     }
@@ -75,6 +75,7 @@ function LogIn() {
           {errors.password && <p>{errors.password.message}</p>}
 
           <button type="submit">Login</button>
+          <NavLink to={"/signup"}><button type="submit">Sing Up</button> </NavLink>
         </div>
       </form>
     </div>
