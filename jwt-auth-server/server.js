@@ -3,10 +3,22 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const cors = require('cors');
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+ 
+
+app.use(cors({
+  origin: 'http://localhost:3000', // Убедитесь, что это точно URL вашего фронтенда
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true, // Разрешаем отправку куки (если используете куки)
+  allowedHeaders: ['Authorization', 'Content-Type'], // Для заголовков токена
+}));
+
+
 
 app.use(express.json()); // Для парсинга JSON в теле запросов
 
@@ -18,6 +30,10 @@ const JWT_SECRET = process.env.JWT_SECRET;
 app.post('/register', async (req, res) => {
   const { username, password } = req.body;
 
+  const existingUser = users.find((user) => user.username === username);
+  if (existingUser) {
+    return res.status(400).json({ message: 'Username already exists' });
+  }
   // Хешируем пароль перед сохранением
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -26,6 +42,15 @@ app.post('/register', async (req, res) => {
 
   res.status(201).json({ message: 'User created successfully' });
 });
+
+app.get('/users', (req, res) => {
+  res.json(users); // Отправляем список пользователей в формате JSON
+});
+
+app.get('/register', (req, res) => {
+  res.send('Welcome to the JWT Auth Server!');
+});
+
 
 // Логин пользователя
 app.post('/login', async (req, res) => {
@@ -36,7 +61,7 @@ app.post('/login', async (req, res) => {
   if (!user) {
     return res.status(400).json({ message: 'User not found' });
   }
-
+ 
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
   if (!isPasswordValid) {
@@ -72,7 +97,7 @@ function verifyToken(req, res, next) {
     res.status(400).json({ message: 'Invalid or expired token' });
   }
 }
-
+console.log('JWT_SECRET:', process.env.JWT_SECRET);
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on po11rt ${PORT}`);
 });
