@@ -26,10 +26,20 @@ const useAxios = () => {
     });
   };
 
+  const putData = async (url, _id, updatedData) => {
+    const { data } = await axios.put(`${url}/${_id}`, updatedData);
+    dispatch({
+      type: setTodo,
+      payload: todoes.map((todo) => (todo.id === _id ? { ...todo, ...data } : todo)),
+    });
+  };
+  
+
   return {
     getData,
     postData,
     deleteData,
+    putData
   };
 };
 
