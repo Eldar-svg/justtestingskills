@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-
+import axios from "axios";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 import "./App.css";
+
 function LogIn() {
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -12,44 +15,50 @@ function LogIn() {
     setFocus,
   } = useForm({
     defaultValues: {
-      login: "",
+      username: "",
       password: "",
     },
   });
-  const users = [
-    { login: "admin", password: "admin1", role: "admin" },
-    { login: "user", password: "user1", role: "user" },
-  ];
-  console.log(users.login)
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    setFocus("login");
+    setFocus("username");
   }, [setFocus]);
 
-  const handlersub = (data) => {
-    const authenticatedUser = users.find(
-      (user) => user.login === data.login && user.password === data.password
-    );
+  const handleLogin = async (data) => {
+    setLoading(true);
+    try {
+      const response = await axios.post("http://localhost:5000/login", data, {
+        withCredentials: true,
+      });
+      const { token, role } = response.data;
 
-    if (authenticatedUser) {
+      // Если сервер не возвращает username, можно не устанавливать его в localStorage.
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", role);
       
-      localStorage.setItem("token", true);
-      localStorage.setItem("username", authenticatedUser.login);
-      localStorage.setItem("role", authenticatedUser.role);
+      console.log(token);
+      setMessage(`Logged in successfully as ${role}`);
 
-  
-      if (authenticatedUser.role === "admin") {
+      // Навигация в зависимости от роли
+      if (role === "admin") {
         navigate("/products");
-      } 
-    } else {
-      alert("Incorrect login or password");
+      } else {
+        navigate("/");
+      }
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || err.message || "An unknown error occurred";
+      setMessage(`Login failed: ${errorMessage}`);
+      console.error("Login error: ", err);  // Дополнительное логирование ошибок
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
     <div className="App">
-      <form onSubmit={handleSubmit(handlersub)}>
+      <form onSubmit={handleSubmit(handleLogin)}>
         <div
           style={{
             display: "flex",
@@ -60,22 +69,29 @@ function LogIn() {
             flex: "1",
           }}
         >
-          <label>Login:</label>
+          <h2>Login</h2>
           <input
-            {...register("login", { required: "Username is required" })}
+            {...register("username", { required: "Username is required" })}
             type="text"
+            placeholder="Username"
           />
-          {errors.login && <p>{errors.login.message}</p>}
+          {errors.username && <p>{errors.username.message}</p>}
 
-          <label>Password:</label>
           <input
             {...register("password", { required: "Password is required" })}
             type="password"
+            placeholder="Password"
           />
           {errors.password && <p>{errors.password.message}</p>}
 
-          <button type="submit">Login</button>
-          <NavLink to={"/signup"}><button type="submit">Sing Up</button> </NavLink>
+          <button type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
+
+          {message && <p>{message}</p>}
+          <NavLink to="/signup">
+            <button type="button">Sign Up</button>
+          </NavLink>
         </div>
       </form>
     </div>
