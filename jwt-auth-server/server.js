@@ -8,16 +8,18 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
-const JWT_SECRET = process.env.JWT_SECRET
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+const JWT_SECRET = process.env.JWT_SECRET;
 
-app.use(cors({
-  origin: "http://localhost:3000",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true,
-  allowedHeaders: ["Authorization", "Content-Type"],
-}));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+    allowedHeaders: ["Authorization", "Content-Type"],
+  })
+);
 
 app.use(express.json());
 
@@ -40,7 +42,38 @@ app.post("/register", async (req, res) => {
   const newUser = { id: Date.now(), username, password: hashedPassword, role };
   users.push(newUser);
 
-  res.status(201).json({ message: "User registered successfully", user: newUser });
+  res
+    .status(201)
+    .json({ message: "User registered successfully", user: newUser });
+});
+
+ 
+
+// Пример получения данных текущего пользователя
+app.get("/current-user", async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];  // Получаем токен из заголовка
+
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);  // Декодируем токен
+
+    // Находим пользователя по ID из токена
+    const user = users.find((u) => u.id === decoded.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ username: user.username });  // Возвращаем имя пользователя
+  } catch (err) {
+    res.status(401).json({ message: "Invalid token" });
+
+  }
+  console.log("Request to /current-user received");
+
 });
 
 // Логин пользователя
@@ -48,8 +81,12 @@ app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-    const token = jwt.sign({ username, role: "admin" }, JWT_SECRET, { expiresIn: "1h" });
-    return res.status(200).json({ message: "Admin logged in", role: "admin", token });
+    const token = jwt.sign({ username, role: "admin" }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    return res
+      .status(200)
+      .json({ message: "Admin logged in", role: "admin", token });
   }
 
   const user = users.find((u) => u.username === username);
@@ -62,7 +99,9 @@ app.post("/login", async (req, res) => {
     return res.status(401).json({ message: "Invalid username or password" });
   }
 
-  const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: "1h" });
+  const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, {
+    expiresIn: "1h",
+  });
 
   res.json({ message: "Login successful", token, role: user.role });
 });
@@ -72,11 +111,11 @@ app.get("/register", (req, res) => {
   res.json(users);
 });
 
-app.get("/login",(req,res)=>{
-  res.json(users)
-})
-console.log('JWT_SECRET:', process.env.JWT_SECRET);
-console.log(process.env.ADMIN_PASSWORD)
+app.get("/login", (req, res) => {
+  res.json(users);
+});
+console.log("JWT_SECRET:", process.env.JWT_SECRET);
+console.log(process.env.ADMIN_PASSWORD);
 // Запуск сервера
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
