@@ -7,7 +7,7 @@ import { ToastContext } from "./useToast";
 function useQueryFetch() {
   const { dispatch, triggerToast, toastActionTypes } = useContext(ToastContext);
   const queryClient = useQueryClient();
-  const { getData, postData, deleteData } = useAxios();
+  const { getData, postData, deleteData, putData } = useAxios();
 
   const isFetching = useRef(false);
 
@@ -67,15 +67,37 @@ function useQueryFetch() {
     }
   );
 
+  const { mutate: updateItem } = useMutation(
+    (updatedData) =>
+      putData(
+        `https://api.sampleapis.com/coffee/iced/`,
+        updatedData.id,
+        updatedData
+      ),
+    {
+      onMutate: async () => {
+        triggerToast("Updating data...");
+      },
+      onSuccess: () => {
+        dispatch({ type: toastActionTypes.LOADED });
+        queryClient.invalidateQueries("token");
+      },
+      onError: (error) => {
+        console.error("Error toast triggered");
+        toast.error(`Failed to update: ${error.message}`);
+      },
+    }
+  );
+
   // Обработчик для добавления данных
   const handlePost = (inputState, e) => {
-    if (e) e.preventDefault();
+    e.preventDefault();
     const { title, ingredients, description, img } = inputState;
     const newTodo = {
       id: crypto.randomUUID(),
       title,
       ingredients: ingredients
-        .split(",")
+        .split(";")
         .map((ingredient) => ingredient.trim())
         .filter((ingredient) => ingredient !== ""),
       description,
@@ -87,6 +109,10 @@ function useQueryFetch() {
   // Обработчик для удаления данных
   const deleteQuery = (id) => {
     deleteItem(id);
+  };
+
+  const handleQuery = async (id) => {
+    updateItem(id);
   };
 
   // Функция для перезагрузки данных
@@ -106,6 +132,7 @@ function useQueryFetch() {
     fetchAgain,
     isLoading,
     isError,
+    handleQuery,
   };
 }
 
