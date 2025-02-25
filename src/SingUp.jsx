@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function SingUp() {
   const [form, setForm] = useState({
@@ -10,7 +10,7 @@ function SingUp() {
   }); // Добавляем поле роли
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false); 
-
+const navigator = useNavigate()
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -26,8 +26,14 @@ function SingUp() {
         { withCredentials: true }
       );
       const { username, role } = response.data;
+
       console.log(username,role)
       setMessage("Registration successful! " + response.data.message);
+
+      setTimeout(()=>{
+        navigator("/login")
+      },3000)
+
 
     } catch (err) {
       console.error(err);
@@ -65,7 +71,7 @@ function SingUp() {
           <button type="submit" disabled={loading}>
             {loading ? "Registering..." : "Register"}
           </button>
-          <Link to={`/login`}>Back</Link>
+        
 
         </form>
 
