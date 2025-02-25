@@ -26,7 +26,7 @@ function EachCoffe({
             onChange={(e) => toggleCheck(id, e.target.checked)}
           />
           <NavLink to={`/products/${id}`}>{title}</NavLink> 
-          <NavLink to={`/products/edit/${id}`}><button>Edit</button></NavLink>   
+          {logdata === "admin" && <NavLink to={`/products/edit/${id}`}><button>Edit</button></NavLink>   }
           <p>{description}</p>
           <img
             style={{
