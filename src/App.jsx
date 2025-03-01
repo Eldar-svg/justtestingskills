@@ -1,5 +1,5 @@
 import Root from "./Root";
-import "./App.css";
+
 import useToggleHook from "./hooks/useToggleHook";
 import { Outlet } from "react-router-dom";
 import { Todocontext } from "./hooks/useReduceStates";
