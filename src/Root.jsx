@@ -49,8 +49,19 @@ function Root() {
   };
 
   return (
-    <div>
-      <ul style={{ listStyle: "none" }}>
+    <div
+   
+  >
+      <ul  style={{
+      maxWidth:"100%", // Максимальная ширина
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: "10px", // Отступы между элементами
+      flexWrap: "wrap", // Позволяет переносить элементы, если не помещаются
+      flexDirection:"row",
+      listStyle:"none"
+    }}>
         <li>
           <Link style={{ textDecoration: "none" }} to={`/`}>
             About Us
@@ -62,13 +73,12 @@ function Root() {
           </Link>
         </li>
         <li>Contacts</li>
+        <h3  >Welcome {username || "guest"}! Role: {role}</h3>
         {isLoggedIn && (
-          <>
-            <button onClick={handleLogOut}>Logout</button>
-            <div>
-              <h3>Добро пожаловать, {username || "Гость"}! Ваш роль: {role}</h3>
-            </div>
-          </>
+         
+            <button  onClick={handleLogOut}>Logout</button>
+            
+         
         )}
         {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
       </ul>
