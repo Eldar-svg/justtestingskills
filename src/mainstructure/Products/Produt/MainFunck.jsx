@@ -24,7 +24,8 @@ function MainFunck({
   const { isLoading } = useQueryFetch();
 
   return (
-    <div>
+    <div  >
+     <div style={{gap:"20px",justifyContent:"center",display:"flex",flexDirection:"row", alignItems:"center",backgroundColor:"yellow",padding:"30px",marginBottom:"20px"}}>
       <AddNewItem
         handlePost={handlePost}
         handlerinput={handlerinput}
@@ -36,16 +37,16 @@ function MainFunck({
         Modal={Modal}
         inputState={inputState}
       />
-      <div>
+      <>
         <SearchBar
           inputState={inputState}
           handlerinput={handlerinput}
           inputToggle={inputToggle}
         />
-      </div>
-      <button onClick={fetchAgain} disabled={isLoading}>
+      </>
+      <button style={{maxWidth:"10%"}} onClick={fetchAgain} disabled={isLoading}>
         {state.todo.length === 0 ? "Request Data" : "Refresh"}
-      </button>
+      </button></div>
       <form>
         <label htmlFor="d">
           Choose All:

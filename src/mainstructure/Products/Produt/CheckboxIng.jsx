@@ -1,19 +1,33 @@
-import React from 'react'
+import React from "react";
 
-function CheckboxIng({toggleCheck,selectedIngrid}) {
+function CheckboxIng({ toggleCheck, selectedIngrid }) {
   return (
-    <div>{selectedIngrid.map(({ id, ingredients, check }) => (
-        <p style={{ display: "flex", width: "30%", margin: "auto" }} key={id}>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+      {selectedIngrid.map(({ id, ingredients, check }) => (
+        <label
+          key={id}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            padding: "5px",
+            border: "1px solid #ccc",
+            borderRadius: "5px",
+            cursor: "pointer",
+            minWidth: "120px",
+          }}
+        >
           <input
+            type="checkbox"
             checked={check}
             onChange={(e) => toggleCheck(id, e.target.checked)}
-            type="checkbox"
           />
-          {`${ingredients}`}
-        </p>
+          {Array.isArray(ingredients) ? ingredients.join(", ") : ingredients}
+        </label>
       ))}
-     </div>
-  )
+    </div>
+  );
 }
 
-export default CheckboxIng
+export default CheckboxIng;
+

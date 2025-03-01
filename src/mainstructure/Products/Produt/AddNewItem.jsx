@@ -10,8 +10,8 @@ function AddNewItem({
   toCloseModal,
   inputState,
 }) {
-  return (
-    <div>
+  return (                        
+    <div >
       {logdata === "admin" && (
         <>
           <button onClick={toCloseModal}>Add new coffee</button>
@@ -24,7 +24,7 @@ function AddNewItem({
               inputState={inputState}
             />
           </Modal>
-        </>
+        </>                            
       )}
     </div>
   );

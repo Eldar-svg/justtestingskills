@@ -18,6 +18,7 @@ function InputofModal({
           handlerinput("title", "");
           handlerinput("description", "");
           handlerinput("ingredients", "");
+          
           toCloseModal();
         }}
       >

@@ -19,7 +19,7 @@ function Inputs({
         type="text"
       />
       <p>Image:</p>
-      <input type="url" value={img} onChange={(e) => addImg(e.target.value)} />
+      <input type="url" value={img} onChange={onChangeInput("img")} />
 
       <p>Ingred:</p>
       <input
