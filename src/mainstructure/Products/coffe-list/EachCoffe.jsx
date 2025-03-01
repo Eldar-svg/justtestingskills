@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 function EachCoffe({
   id,
@@ -12,38 +13,109 @@ function EachCoffe({
   toggleCheck,
 }) {
   return (
-    <div>
-      <ul
-        style={{
-          listStyle: "none",
-          marginTop: "100px",
-        }}
-      >
-        <li style={{ gap: "50px", margin: "auto", width: "50%" }} key={id}>
-          <input
-            type="checkbox"
-            checked={check}
-            onChange={(e) => toggleCheck(id, e.target.checked)}
-          />
-          <NavLink to={`/products/${id}`}>{title}</NavLink> 
-          {logdata === "admin" && <NavLink to={`/products/edit/${id}`}><button>Edit</button></NavLink>   }
-          <p>{description}</p>
-          <img
+    <div
+      style={{
+        display: "flex",
+       
+        justifyContent: "center", // Центрируем по горизонтали
+        alignItems: "center",     // Центрируем по вертикали
+        height: "100vh",          // Чтобы центрировать по всей высоте экрана
+      }}
+    >
+      <AnimatePresence>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row", // Выравниваем элементы по вертикали
+            alignItems: "center",    // Центрируем дочерние элементы по горизонтали
+            maxWidth: "100%",
+            borderRadius: "10px",
+            backgroundColor: "pink",
+            padding: "20px",         // Отступы для удобства
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Тень для улучшения визуала
+          }}
+        >
+          <ul
             style={{
-              width: "300px",
-              height: "300px",
+              display: "flex",
+              flexDirection: "column", // Выравниваем список по вертикали
+              listStyle: "none",
+              justifyContent: "center",
+              alignItems: "center",    // Центрируем элементы списка
+              width: "100%",
             }}
-            src={image}
-            alt={title}
-          />
-          <p>{ingredients}</p>
-          {logdata === "admin" && (
-            <button style={{ display: "flex" }} onClick={() => deleteQuery(id)}>
-              Delete
-            </button>
-          )}
-        </li>
-      </ul>
+          >
+            <li
+              style={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column", // Изменил на column, чтобы элементы шли вертикально
+                maxWidth: "100%",
+                borderRadius: "10px",
+                backgroundColor: "pink",
+                padding: "10px",        // Добавил немного отступов для улучшения внешнего вида
+              }}
+              key={id}
+            >
+              <input
+                type="checkbox"
+                checked={check}
+                onChange={(e) => toggleCheck(id, e.target.checked)}
+              />
+              <NavLink to={`/products/${id}`} style={{ marginBottom: "10px" }}>
+                Name: {title}
+              </NavLink>
+              <p>Description: {description}</p>
+              <img
+                style={{
+                  width: "300px",
+                  height: "300px",
+                  marginBottom: "10px", // Добавил отступы для визуальной красоты
+                }}
+                src={image}
+                alt={title}
+              />
+              <p>Ingredients: {ingredients}</p>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                  width: "100%",
+                  marginTop: "20px",
+                }}
+              >
+                {logdata === "admin" && (
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ duration: 0.2 }}
+                    onClick={() => deleteQuery(id)}
+                    style={{
+                      maxWidth: "50%",
+                    }}
+                  >
+                    Delete
+                  </motion.button>
+                )}
+                {logdata === "admin" && (
+                  <NavLink to={`/products/edit/${id}`}>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      transition={{ duration: 0.2 }}
+                      style={{
+                        maxWidth: "200%",
+                      }}
+                    >
+                      Edit
+                    </motion.button>
+                  </NavLink>
+                )}
+              </div>
+            </li>
+          </ul>
+        </div>
+      </AnimatePresence>
     </div>
   );
 }
