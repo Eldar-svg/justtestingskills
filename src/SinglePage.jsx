@@ -11,12 +11,12 @@ const ProductPage = () => {
   // Использование контекста
   const { check,logdata, deleteQuery, toggleCheck } = useContext(DataContext);
   useEffect(() => {
+    
     const fetchProduct = async () => {
       try {
-        const { data } = await axios.get(
-          `https://api.sampleapis.com/coffee/iced/${id}`
-        );
-        setProduct(data);
+        const response = await axios.get(`http://localhost:5000/goods/${id}`)
+        setProduct(response.data);
+        console.log(response.data)
       } catch (error) {
         console.error("Error fetching product:", error);
       }
