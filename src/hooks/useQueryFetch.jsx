@@ -8,17 +8,19 @@ function useQueryFetch() {
   const { dispatch, triggerToast, toastActionTypes } = useContext(ToastContext);
   const queryClient = useQueryClient();
   const { getData, postData, deleteData, putData } = useAxios();
-
+  const token = localStorage.getItem("token");
   const isFetching = useRef(false);
 
-  // Устанавливаем enabled: false для ручного вызова запроса через refetch
+  function DataAxios() {
+    return getData("http://localhost:5000/goods");
+  }
+
   const {
     isLoading,
     isError,
     refetch: Refresh,
-  } = useQuery("token", DataAxsios, {
-    enabled: false, // Не запускается автоматически
-
+  } = useQuery("goods", DataAxios, {
+    enabled: true,
     onSuccess: () => {
       console.log("Data successfully fetched");
       dispatch({ type: toastActionTypes.SUCCESS });
@@ -28,38 +30,46 @@ function useQueryFetch() {
     },
   });
 
-  // Функция для получения данных
-  function DataAxsios() {
-    return getData("https://api.sampleapis.com/coffee/iced");
-  }
-
-  // Функция для добавления данных
   const { mutate: addData } = useMutation(
-    (newTodo) => postData("https://api.sampleapis.com/coffee/iced", newTodo),
+    (newTodo) =>
+      postData("http://localhost:5000/goods", newTodo, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }),
     {
-      onMutate: () => {
-        triggerToast("Adding data...");
+      onMutate: async () => {
+        await triggerToast("Adding data...");
       },
       onSuccess: () => {
         dispatch({ type: toastActionTypes.ADDED });
-        queryClient.invalidateQueries("token");
+        // Обновляем данные в кэше
+        queryClient.invalidateQueries("goods");
       },
       onError: (error) => {
+        console.error(
+          "Error occurred:",
+          error.response ? error.response.data : error.message
+        );
         dispatch({
           type: toastActionTypes.ERROR_ADDED,
-          payload: { message: error.message },
+          payload: {
+            message: error.response
+              ? error.response.data.message
+              : error.message,
+          },
         });
       },
     }
   );
 
-  // Функция для удаления данных
   const { mutate: deleteItem } = useMutation(
-    (id) => deleteData(`https://api.sampleapis.com/coffee/iced`, id),
+    (id) => deleteData(`http://localhost:5000/goods`, id),
     {
       onSuccess: () => {
         toast.success("Deleted successfully!");
-        queryClient.invalidateQueries("token");
+        queryClient.invalidateQueries("goods");
       },
       onError: (error) => {
         toast.error(`Failed to delete: ${error.message}`);
@@ -69,18 +79,14 @@ function useQueryFetch() {
 
   const { mutate: updateItem } = useMutation(
     (updatedData) =>
-      putData(
-        `https://api.sampleapis.com/coffee/iced/`,
-        updatedData.id,
-        updatedData
-      ),
+      putData(`http://localhost:5000/goods`, updatedData.id, updatedData),
     {
       onMutate: async () => {
-        triggerToast("Updating data...");
+        await triggerToast("Updating data...");
       },
       onSuccess: () => {
         dispatch({ type: toastActionTypes.LOADED });
-        queryClient.invalidateQueries("token");
+        queryClient.invalidateQueries("goods");
       },
       onError: (error) => {
         console.error("Error toast triggered");
@@ -89,44 +95,46 @@ function useQueryFetch() {
     }
   );
 
-  // Обработчик для добавления данных
-  const handlePost = (inputState, e) => {
-    e.preventDefault();
+  const handlePost = (inputState) => {
     const { title, ingredients, description, img } = inputState;
     const newTodo = {
-      id: crypto.randomUUID(),
       title,
       ingredients: ingredients
         .split(";")
         .map((ingredient) => ingredient.trim())
         .filter((ingredient) => ingredient !== ""),
       description,
-      image: img,
+      image: img || null,
     };
+
+    console.log("Отправляемые данные:", newTodo);
     addData(newTodo);
   };
 
-  // Обработчик для удаления данных
   const deleteQuery = (id) => {
-    deleteItem(id);
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      deleteItem(id);
+    }
   };
 
-  const handleQuery = async (id) => {
-    updateItem(id);
+  const handleQuery = (updatedData) => {
+    updateItem(updatedData);
   };
 
-  // Функция для перезагрузки данных
   const fetchAgain = async () => {
-    if (isFetching.current) return; // Если запрос уже выполняется, не запускаем повторно
+    if (isFetching.current) return;
     isFetching.current = true;
 
-    triggerToast("Refreshing data...");
-    await Refresh();
-    isFetching.current = false;
+    try {
+      triggerToast("Refreshing data...");
+      await Refresh();
+    } finally {
+      isFetching.current = false;
+    }
   };
 
   return {
-    DataAxsios,
+    DataAxios,
     handlePost,
     deleteQuery,
     fetchAgain,
