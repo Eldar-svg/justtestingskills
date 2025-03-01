@@ -1,21 +1,32 @@
-import React, { useContext } from "react";
+import React, { useContext,useRef } from "react";
 import { Todocontext } from "./useReduceStates";
-import { useRef } from "react";
+
 function usePages() {
   const { state } = useContext(Todocontext);
   const [currentPage, setCurrentPage] = React.useState(1);
 
-  const itemsPerPage = 2;
+
+  const itemsPerPage = 8;
+  const totalItems = state.todo.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  // Индексы элементов для текущей страницы
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = state.todo.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(state.todo.length / itemsPerPage);
   const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+  // Переводим на следующую страницу
   const handleNextPage = (page) => {
-    setCurrentPage(page);
-    scrollToTop();
+    // Проверка, чтобы текущая страница не выходила за пределы
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      scrollToTop();
+    }
   };
+
+  // Прокрутка страницы вверх при смене страницы
   const containerRef = useRef(null);
   const scrollToTop = () => {
     if (containerRef.current) {
@@ -23,6 +34,8 @@ function usePages() {
     }
   };
 
+  // Инвалидация кеша для обновления данных
+ 
   return {
     currentItems,
     pages,
