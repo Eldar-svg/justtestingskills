@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Root from "../../../Root";
 import axios from "axios";
 import useQueryFetch from "../../../hooks/useQueryFetch";
@@ -26,7 +26,7 @@ function EditCoffe() {
       setError(null);
       try {
         const { data } = await axios.get(
-          `https://api.sampleapis.com/coffee/iced/${id}`
+          `http://localhost:5000/goods/${id}`
         );
         setProduct({
           title: data.title || "",
@@ -53,6 +53,8 @@ function EditCoffe() {
     }));
   };
  
+  const navigator = useNavigate()
+
   // Обработчик сохранения
   const handleSave = async (e) => {
     e.preventDefault();
@@ -65,9 +67,11 @@ function EditCoffe() {
       ...product,
       id, // включаем id в обновляемые данные
     };
-    console.log(1)
    
-    handleQuery(updatedProduct); // передаём обновлённые данные в useQueryFetch
+   
+    handleQuery(updatedProduct);
+    navigator('/products')
+    // передаём обновлённые данные в useQueryFetch
   };
 
   return (
@@ -128,7 +132,7 @@ function EditCoffe() {
             />
           </div>
 
-          <button className={styles.button} onClick={handleSave}type="submit">Save Changes</button>
+         <button className={styles.button} onClick={handleSave}type="submit">Save Changes</button> 
         </form>
       )}
     </div>
