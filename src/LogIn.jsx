@@ -29,9 +29,7 @@ function LogIn() {
   const handleLogin = async (data) => {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:5000/login", data, {
-        withCredentials: true,
-      });
+      const response = await axios.post("http://localhost:5000/login", data);
       const { token, role } = response.data;
 
       // Если сервер не возвращает username, можно не устанавливать его в localStorage.
