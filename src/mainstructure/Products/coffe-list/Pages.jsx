@@ -1,49 +1,62 @@
-import React from "react";
+import React  from "react"; // Добавляем useRef
+import usePaginatedProducts from "../../../hooks/usePaginatedProducts";
 
-function Pages({ handleNextPage, totalPages, pages, currentPage }) {
+function Pages({ page,handlerScrollUp}) {
+  const { data } = usePaginatedProducts(page);
+ 
+
+  if (!data) return <p>Loading...</p>;
+
   return (
     <>
-      {" "}
+      {/* Привязываем ref к элементу, к которому будем прокручивать */}
       <div
+        // Добавляем ref к контейнеру
         style={{
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
+          alignItems: "center",
+          gap: "10px",
           maxWidth: "100%",
           backgroundColor: "pink",
+          padding: "10px",
         }}
       >
-        {pages.map((page) => (
-          <div
-            style={{
-              padding: "10px",
-            }}
-            key={page}
-          >
+        {/* Генерация кнопок для страниц */}
+        {Array.from({ length: data.totalPages }, (_, i) => i + 1).map(
+          (pageNum) => (
             <button
-              onClick={() => console.log(handleNextPage(page))}
+              key={pageNum}
+              onClick={() => handlerScrollUp(pageNum)} // Используем handlerScrollUp
               style={{
-                display: "flex",
-                flexDirection: "column-reverse",
                 width: "50px",
-                padding: "5px", // Adds some padding inside the button
-                backgroundColor: "lightblue",
+                padding: "5px",
+                backgroundColor: pageNum === page ? "blue" : "lightblue",
+                color: pageNum === page ? "white" : "black",
                 border: "none",
                 borderRadius: "5px",
+                cursor: "pointer",
               }}
             >
-              <p>{page}</p> {/* Remove default margin */}
+              {pageNum}
             </button>
-          </div>
-        ))}
+          )
+        )}
+        Page {page} of {data.totalPages}
       </div>
-      <div>
-        {totalPages > 0 ? (
-          <p>
-            Page {currentPage} of {totalPages}
-          </p>
-        ) : null}
-      </div>
+
+      {/* Кнопки "Назад" и "Вперёд" (если раскомментируете) */}
+      {/* <button disabled={page === 1} onClick={() => handlerScrollUp(page - 1)}>
+        Prev
+      </button>
+      <span> </span>
+      <button
+        disabled={page === data.totalPages}
+        onClick={() => handlerScrollUp(page + 1)}
+      >
+        Next
+      </button> */}
     </>
   );
 }
