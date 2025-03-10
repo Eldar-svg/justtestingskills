@@ -2,10 +2,10 @@ import Root from "./Root";
 
 import useToggleHook from "./hooks/useToggleHook";
 import { Outlet } from "react-router-dom";
-import { Todocontext } from "./hooks/useReduceStates";
-import { useContext, createContext } from "react";
+
+import { createContext, useState } from "react";
 import useQueryFetch from "./hooks/useQueryFetch";
-import usePages from "./hooks/usePages";
+import usePages from "./hooks/usePaginatedProducts";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MainFunck from "./mainstructure/Products/Produt/MainFunck";
@@ -20,7 +20,7 @@ export const DataContext = createContext({
   toggleCheck: () => {},
 });
 function App() {
-  const { state } = useContext(Todocontext);
+ const [page, setPage] = useState(1);
   const { handlePost, deleteQuery, fetchAgain } = useQueryFetch();
   const { check, toggleCheck, selectAllBtn, deleteAll, ingredientBox, addImg } =
     useFetchHooks();
@@ -50,7 +50,6 @@ function App() {
   } = usePages();
 
   const toCloseModal = () => inputToggle("CloseModal");
-  const selectedIngrid = state.todo;
 
   return (
     <div ref={containerRef} className="App">
@@ -76,6 +75,7 @@ function App() {
         fetchAgain={fetchAgain}
         deleteAll={deleteAll}
         inputState={inputState}
+        page={page}
       />
       <DataContext.Provider
         value={{
@@ -87,7 +87,7 @@ function App() {
       >
         <Outlet />
       </DataContext.Provider>
-      <CheckboxIng toggleCheck={toggleCheck} selectedIngrid={selectedIngrid} />
+      {/* <CheckboxIng toggleCheck={toggleCheck}  /> */}
 
       <MainCoffeList
         inputState={inputState}
@@ -96,6 +96,7 @@ function App() {
         toggleCheck={toggleCheck}
         ingredientBox={ingredientBox}
         currentItems={currentItems}
+        page={page}
       />
 
       <Pages
@@ -103,6 +104,8 @@ function App() {
         pages={pages}
         handleNextPage={handleNextPage}
         currentPage={currentPage}
+        page={page}
+        setPage={setPage}
       />
     </div>
   );
