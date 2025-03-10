@@ -2,10 +2,10 @@ import Root from "./Root";
 
 import useToggleHook from "./hooks/useToggleHook";
 import { Outlet } from "react-router-dom";
-
+import { useRef } from "react";
 import { createContext, useState } from "react";
 import useQueryFetch from "./hooks/useQueryFetch";
-import usePages from "./hooks/usePaginatedProducts";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MainFunck from "./mainstructure/Products/Produt/MainFunck";
@@ -20,11 +20,11 @@ export const DataContext = createContext({
   toggleCheck: () => {},
 });
 function App() {
- const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1);
   const { handlePost, deleteQuery, fetchAgain } = useQueryFetch();
   const { check, toggleCheck, selectAllBtn, deleteAll, ingredientBox, addImg } =
     useFetchHooks();
-
+  const reff = useRef(null);
   const logdata = localStorage.getItem("role");
 
   const { inputToggle, inputState, handlerinput } = useToggleHook({
@@ -40,19 +40,17 @@ function App() {
     OpenModal: false,
   });
 
-  const {
-    containerRef,
-    handleNextPage,
-    pages,
-    totalPages,
-    currentPage,
-    currentItems,
-  } = usePages();
+  const handlerScrollUp = (pageNum) => {
+    setPage(pageNum); // Устанавливаем новую страницу
+    if (reff.current) {
+      reff.current.scrollIntoView({ behavior: "smooth" }); // Прокручиваем к элементу
+    }
+  };
 
   const toCloseModal = () => inputToggle("CloseModal");
 
   return (
-    <div ref={containerRef} className="App">
+    <div ref={reff} className="App">
       <ToastContainer
         stacked
         position="top-right"
@@ -95,18 +93,11 @@ function App() {
         deleteQuery={deleteQuery}
         toggleCheck={toggleCheck}
         ingredientBox={ingredientBox}
-        currentItems={currentItems}
         page={page}
+        reff={reff}
       />
 
-      <Pages
-        totalPages={totalPages}
-        pages={pages}
-        handleNextPage={handleNextPage}
-        currentPage={currentPage}
-        page={page}
-        setPage={setPage}
-      />
+      <Pages page={page} setPage={setPage} handlerScrollUp={handlerScrollUp} />
     </div>
   );
 }
