@@ -1,5 +1,5 @@
 import React from "react";
-
+import { motion, AnimatePresence } from "framer-motion";
 import "./Modal.css";
 function Modal({ closeModal, showModal, children }) {
   const handleBackdropClick = (e) => {
@@ -14,14 +14,26 @@ function Modal({ closeModal, showModal, children }) {
 
   return (
     <div>
-      <div className="modal-overlay" onClick={handleBackdropClick}>
-        <div className="modal-content">
-          <button onClick={closeModal} className="close-button">
-            &times;
-          </button>
-          {children}
-        </div>
-      </div>
+      <AnimatePresence>
+         
+        (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          >
+            <div className="modal-overlay" onClick={handleBackdropClick}>
+              <div className="modal-content">
+                <button onClick={closeModal} className="close-button">
+                  &times;
+                </button>
+                {children}
+              </div>
+            </div>
+          </motion.div>
+        )
+      </AnimatePresence>
     </div>
   );
 }

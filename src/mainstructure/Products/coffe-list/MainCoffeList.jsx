@@ -12,9 +12,9 @@ function MainCoffeList({
   const { data, error,isLoading } = usePaginatedProducts(page);
   console.log("Page in Pages:", page)
   const itemVariants = {
-    hidden: { opacity: 0, y: -20 },
+    hidden: { opacity: 0, y: 0 },
     visible: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: 20 },
+    
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -67,7 +67,7 @@ function MainCoffeList({
               initial="hidden"
               animate="visible"
               exit="exit"
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.5 }}
               className="p-4 mb-2 bg-gray-100 rounded shadow"
             >
               <EachCoffe
