@@ -18,9 +18,12 @@ function useQueryFetch() {
   const {
     isLoading,
     isError,
+    
     refetch: Refresh,
   } = useQuery("goods", DataAxios, {
+    staleTime: 5 * 60 * 1000,
     enabled: true,
+    refetchOnWindowFocus: false,
     onSuccess: () => {
       console.log("Data successfully fetched");
       dispatch({ type: toastActionTypes.SUCCESS });
