@@ -2,10 +2,10 @@ import Root from "./Root";
 
 import useToggleHook from "./hooks/useToggleHook";
 import { Outlet } from "react-router-dom";
-import { Todocontext } from "./hooks/useReduceStates";
-import { useContext, createContext } from "react";
+import { useRef } from "react";
+import { createContext, useState } from "react";
 import useQueryFetch from "./hooks/useQueryFetch";
-import usePages from "./hooks/usePages";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MainFunck from "./mainstructure/Products/Produt/MainFunck";
@@ -20,11 +20,11 @@ export const DataContext = createContext({
   toggleCheck: () => {},
 });
 function App() {
-  const { state } = useContext(Todocontext);
+  const [page, setPage] = useState(1);
   const { handlePost, deleteQuery, fetchAgain } = useQueryFetch();
   const { check, toggleCheck, selectAllBtn, deleteAll, ingredientBox, addImg } =
     useFetchHooks();
-
+  const reff = useRef(null);
   const logdata = localStorage.getItem("role");
 
   const { inputToggle, inputState, handlerinput } = useToggleHook({
@@ -40,20 +40,17 @@ function App() {
     OpenModal: false,
   });
 
-  const {
-    containerRef,
-    handleNextPage,
-    pages,
-    totalPages,
-    currentPage,
-    currentItems,
-  } = usePages();
+  const handlerScrollUp = (pageNum) => {
+    setPage(pageNum); // Устанавливаем новую страницу
+    if (reff.current) {
+      reff.current.scrollIntoView({ behavior: "smooth" }); // Прокручиваем к элементу
+    }
+  };
 
   const toCloseModal = () => inputToggle("CloseModal");
-  const selectedIngrid = state.todo;
 
   return (
-    <div ref={containerRef} className="App">
+    <div ref={reff} className="App">
       <ToastContainer
         stacked
         position="top-right"
@@ -76,6 +73,7 @@ function App() {
         fetchAgain={fetchAgain}
         deleteAll={deleteAll}
         inputState={inputState}
+        page={page}
       />
       <DataContext.Provider
         value={{
@@ -87,7 +85,7 @@ function App() {
       >
         <Outlet />
       </DataContext.Provider>
-      <CheckboxIng toggleCheck={toggleCheck} selectedIngrid={selectedIngrid} />
+      {/* <CheckboxIng toggleCheck={toggleCheck}  /> */}
 
       <MainCoffeList
         inputState={inputState}
@@ -95,15 +93,11 @@ function App() {
         deleteQuery={deleteQuery}
         toggleCheck={toggleCheck}
         ingredientBox={ingredientBox}
-        currentItems={currentItems}
+        page={page}
+        reff={reff}
       />
 
-      <Pages
-        totalPages={totalPages}
-        pages={pages}
-        handleNextPage={handleNextPage}
-        currentPage={currentPage}
-      />
+      <Pages page={page} setPage={setPage} handlerScrollUp={handlerScrollUp} />
     </div>
   );
 }

@@ -1,11 +1,11 @@
 import React from "react";
 import Root from "./Root";
 
-function Home() {
+function Home():JSX.Element {
   return (
     <div className="App">
       <Root />
-      <div style={{ width: "50%", margin: "auto" }}>
+      <div style={{ width: "50%", margin: "auto" }as React.CSSProperties}>
         Welcome to Café YOU! Cafe YOU logo w RESTAURANTCafe YOU Hours: Monday to
         Saturday: 7:45 AM to 3:30 PM. Kitchen closes at 3 PM. If you are coming
         with a group of more than 6 people please make a reservation –

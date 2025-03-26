@@ -8,7 +8,9 @@ import reportWebVitals from "./reportWebVitals";
 import { QueryClientProvider } from "react-query";
 import useRouting from "./Routing";
 import ToastProvider from "./hooks/useToast";
-const Main = () => {
+const Main : React.FC = () => {
+
+
   const { clientQ, router } = useRouting(); // Хук вызывается внутри компонента
   return (
     <QueryClientProvider client={clientQ}>
@@ -23,7 +25,7 @@ const Main = () => {
   );
 };
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
 root.render(
   <React.StrictMode>
