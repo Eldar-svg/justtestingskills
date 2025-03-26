@@ -1,15 +1,10 @@
 import { useContext, useState } from "react";
-import { Todocontext, TodoAction } from "./useReduceStates";
+import { Todocontext } from "./useReduceStates";
 import useToggleHook from "./useToggleHook";
 
 
-interface btnToggle {
-  id: number;
-  isChek: boolean;
-}
 
 interface useFetchHooksResult {
-  btntoggleING: btnToggle[];
   toggleCheck: (id: number, value: boolean) => void;
   selectAllBtn: () => void;
   deleteAll: (e: React.FormEvent) => void;
@@ -18,9 +13,7 @@ interface useFetchHooksResult {
 }
 
 function useFetchHooks(): useFetchHooksResult {
-  const ToggleBtn:string = "Toggle"
-  const allSelectedBtn:string = "selectAllBtn"
-  const DeleteSelected:string = "DeleteSelected"
+ 
   const { handlerinput } = useToggleHook();
 
   const context = useContext(Todocontext);
@@ -40,7 +33,7 @@ function useFetchHooks(): useFetchHooksResult {
   };
 
   const toggleCheck = (_id: number, value: boolean): void => {
-    dispatch({ type: ToggleBtn, payload: { id: _id, value } });
+    dispatch({ type: "Toggle", payload: { id: _id, value } });
     btntoggleING(_id, value);
   };
 
@@ -49,12 +42,12 @@ function useFetchHooks(): useFetchHooksResult {
   };
 
   const selectAllBtn = (): void => {
-    dispatch({ type: allSelectedBtn });
+    dispatch({ type: "selectAllBtn" });
   };
 
   const deleteAll = (e: React.FormEvent): void => {
     e.preventDefault();
-    dispatch({ type: DeleteSelected });
+    dispatch({ type: "DeleteSelected" });
   };
 
   return { toggleCheck, selectAllBtn, deleteAll, ingredientBox, addImg };
