@@ -7,7 +7,7 @@
 
 # testing
 /coverage
-
+jwt-auth-server/.env
 # production
 /build
 .touch.env
