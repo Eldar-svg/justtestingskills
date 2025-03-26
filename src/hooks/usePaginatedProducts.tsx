@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 
 interface DataFromServise {
-  goods: Array<{ id: string; name: string; price: number }>;
+  goods: Array<{ id: string; name: string; page: number }>;
   totalPages: number;
   currentPage: number;
 }

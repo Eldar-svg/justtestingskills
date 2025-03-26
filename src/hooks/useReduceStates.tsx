@@ -1,11 +1,15 @@
 import { createContext, ReactNode, useReducer } from "react";
-
-interface TodoItem {
-  id: string | number;
-  check: boolean;
+type Ingredients = string | number;
+export interface TodoItem {
+  id: number;
+  title: string;
+  ingredients: Ingredients[];
+  description: string;
+  image: string;
+  check?: boolean;
 }
 
-interface TodoState {
+export interface TodoState {
   todo: TodoItem[];
   allSelected: boolean;
 }
