@@ -5,7 +5,6 @@ import { Outlet } from "react-router-dom";
 import { useRef } from "react";
 import { createContext, useState } from "react";
 import useQueryFetch from "./hooks/useQueryFetch";
-
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MainFunck from "./mainstructure/Products/Produt/MainFunck";
@@ -13,18 +12,21 @@ import CheckboxIng from "./mainstructure/Products/Produt/CheckboxIng";
 import MainCoffeList from "./mainstructure/Products/coffe-list/MainCoffeList";
 import Pages from "./mainstructure/Products/coffe-list/Pages";
 import useFetchHooks from "./hooks/useFetchHooks";
-export const DataContext = createContext({
+import { DataContextStart } from "./mainstructure/Products/coffe-list/MainCoffeList";
+
+export const DataContext = createContext<DataContextStart>({
   check: [],
   logdata: null,
   deleteQuery: null,
   toggleCheck: () => {},
 });
-function App() {
-  const [page, setPage] = useState(1);
+
+function App(): JSX.Element {
+  const [page, setPage] = useState<number>(1);
   const { handlePost, deleteQuery, fetchAgain } = useQueryFetch();
-  const { check, toggleCheck, selectAllBtn, deleteAll, ingredientBox, addImg } =
+  const { toggleCheck, selectAllBtn, deleteAll, ingredientBox, addImg } =
     useFetchHooks();
-  const reff = useRef(null);
+    const reff = useRef<HTMLDivElement | null>(null);
   const logdata = localStorage.getItem("role");
 
   const { inputToggle, inputState, handlerinput } = useToggleHook({
@@ -40,7 +42,7 @@ function App() {
     OpenModal: false,
   });
 
-  const handlerScrollUp = (pageNum) => {
+  const handlerScrollUp = (pageNum: number): void => {
     setPage(pageNum); // Устанавливаем новую страницу
     if (reff.current) {
       reff.current.scrollIntoView({ behavior: "smooth" }); // Прокручиваем к элементу
