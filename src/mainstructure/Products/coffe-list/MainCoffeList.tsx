@@ -3,7 +3,7 @@ import usePaginatedProducts  from "../../../hooks/usePaginatedProducts";
 import { motion, AnimatePresence } from "framer-motion";
 import { TodoItem } from "../../../hooks/useReduceStates";
 import { InputState } from "../../../hooks/useToggleHook";
-import { DataFromServise } from "../../../hooks/usePaginatedProducts";
+ 
 export interface DataContextStart {
   check: boolean[];
   logdata: string | null;
@@ -25,11 +25,7 @@ function MainCoffeList({
   ingredientBox,
   page,
 }: MainCoffeStuff): JSX.Element {
-  const { data, error, isLoading } = usePaginatedProducts(page) as {
-    data: DataFromServise | undefined;
-    error: Error | null;
-    isLoading: boolean;
-  };
+  const { data, error, isLoading } = usePaginatedProducts(page)
   console.log("Page in Pages:", page);
   const itemVariants = {
     hidden: { opacity: 0, y: 0 },

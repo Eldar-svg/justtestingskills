@@ -15,11 +15,11 @@ export interface usePaginatedData {
   error: unknown | null;
 }
 
-function usePaginatedProducts(page: number): UseQueryResult<usePaginatedData, Error> {
+function usePaginatedProducts(page: number): UseQueryResult<DataFromServise, Error> {
   return useQuery(
     ["goods", page],
-    async (): Promise<DataFromServise> => {
-      const { data } = await axios.get<DataFromServise>(
+    async (): Promise<usePaginatedData> => {
+      const { data } = await axios.get<usePaginatedData>(
         `http://localhost:5000/goods?page=${page}&limit=1`
       );
 
