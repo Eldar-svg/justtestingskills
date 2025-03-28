@@ -19,7 +19,7 @@ interface TodoItemInput {
 interface UseQueryResults {
   DataAxios: () => Promise<TodoItem[]>; // Тип возвращаемого значения из getData
   handlePost: (inputState: TodoItemInput) => void;
-  deleteQuery: (id: string) => void;
+  deleteQuery: ((id: string) => void)|null;
   fetchAgain: () => Promise<void>;
   isLoading: boolean;
   isError: boolean;
@@ -132,7 +132,7 @@ function useQueryFetch(): UseQueryResults {
         .map((ingredient:string) => ingredient.trim())
         .filter((ingredient:string) => ingredient !== ""),
       description,
-      img: img ,
+      image: img ,
     };
 
     console.log("Отправляемые данные:", newTodo);

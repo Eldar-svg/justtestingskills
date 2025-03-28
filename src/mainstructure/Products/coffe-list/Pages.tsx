@@ -1,7 +1,10 @@
-import React  from "react"; // Добавляем useRef
 import usePaginatedProducts from "../../../hooks/usePaginatedProducts";
+interface PagesUnit {
+  page:number,
+  handlerScrollUp: (pageNum:number )=>void
+}
 
-function Pages({ page,handlerScrollUp}) {
+function Pages({ page,handlerScrollUp}:PagesUnit):JSX.Element {
   const { data } = usePaginatedProducts(page);
  
 

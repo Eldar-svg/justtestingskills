@@ -5,7 +5,7 @@ export interface TodoItem {
   title: string;
   ingredients: string[];
   description: string;
-  img: string;
+  image: string;
   check?: boolean;
 }
 

@@ -1,5 +1,20 @@
 import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { MainCoffeStuff } from "./MainCoffeList";
+
+import { TodoItem } from "../../../hooks/useReduceStates";
+
+interface EachCoffeProps {
+  id: string;
+  title: string;
+  ingredients: string[];
+  description: string;
+  image: string;
+  check: boolean | undefined;
+  logdata: string | null;
+  deleteQuery: ((id: string) => void) | null
+  toggleCheck: (id: string, value: boolean) => void;
+}
 
 function EachCoffe({
   id,
@@ -11,15 +26,15 @@ function EachCoffe({
   logdata,
   deleteQuery,
   toggleCheck,
-}) {
+}: EachCoffeProps): JSX.Element {
   return (
     <div
       style={{
         display: "flex",
-       
+
         justifyContent: "center", // Центрируем по горизонтали
-        alignItems: "center",     // Центрируем по вертикали
-        height: "100vh",          // Чтобы центрировать по всей высоте экрана
+        alignItems: "center", // Центрируем по вертикали
+        height: "100vh", // Чтобы центрировать по всей высоте экрана
       }}
     >
       <AnimatePresence>
@@ -27,11 +42,11 @@ function EachCoffe({
           style={{
             display: "flex",
             flexDirection: "row", // Выравниваем элементы по вертикали
-            alignItems: "center",    // Центрируем дочерние элементы по горизонтали
+            alignItems: "center", // Центрируем дочерние элементы по горизонтали
             maxWidth: "100%",
             borderRadius: "10px",
             backgroundColor: "pink",
-            padding: "20px",         // Отступы для удобства
+            padding: "20px", // Отступы для удобства
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Тень для улучшения визуала
           }}
         >
@@ -41,7 +56,7 @@ function EachCoffe({
               flexDirection: "column", // Выравниваем список по вертикали
               listStyle: "none",
               justifyContent: "center",
-              alignItems: "center",    // Центрируем элементы списка
+              alignItems: "center", // Центрируем элементы списка
               width: "100%",
             }}
           >
@@ -53,14 +68,14 @@ function EachCoffe({
                 maxWidth: "100%",
                 borderRadius: "10px",
                 backgroundColor: "pink",
-                padding: "10px",        // Добавил немного отступов для улучшения внешнего вида
+                padding: "10px", // Добавил немного отступов для улучшения внешнего вида
               }}
               key={id}
             >
               <input
                 type="checkbox"
                 checked={check}
-                onChange={(e) => toggleCheck(id, e.target.checked)}
+                onChange={(e:React.ChangeEvent<HTMLInputElement>):void => toggleCheck(id, e.target.checked)}
               />
               <NavLink to={`/products/${id}`} style={{ marginBottom: "10px" }}>
                 Name: {title}
@@ -89,7 +104,7 @@ function EachCoffe({
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     transition={{ duration: 0.2 }}
-                    onClick={() => deleteQuery(id)}
+                    onClick={() => deleteQuery?.(id)}
                     style={{
                       maxWidth: "50%",
                     }}

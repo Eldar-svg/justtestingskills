@@ -54,7 +54,7 @@ const useAxios = (): useAxiosFunck => {
         title: data.title,
         ingredients: data.ingredients,
         description: data.description,
-        img: data.img,
+        image: data.image,
         check:data.check ?? false
       }; // Убираем check и error
       dispatch({ type: "setTodo", payload: [newTodo, ...todoes] });

@@ -3,18 +3,13 @@ import usePaginatedProducts  from "../../../hooks/usePaginatedProducts";
 import { motion, AnimatePresence } from "framer-motion";
 import { TodoItem } from "../../../hooks/useReduceStates";
 import { InputState } from "../../../hooks/useToggleHook";
- 
-export interface DataContextStart {
-  check: boolean[];
-  logdata: string | null;
-  deleteQuery: string | null;
-  toggleCheck: () => void;
-}
+ import { DataContextStart } from "../../../App";
 
-interface MainCoffeStuff extends DataContextStart {
+export interface MainCoffeStuff extends DataContextStart {
   inputState: InputState;
   page: number;
   ingredientBox: string[];
+   
 }
 
 function MainCoffeList({
@@ -23,7 +18,7 @@ function MainCoffeList({
   deleteQuery,
   toggleCheck,
   ingredientBox,
-  page,
+  page
 }: MainCoffeStuff): JSX.Element {
   const { data, error, isLoading } = usePaginatedProducts(page)
   console.log("Page in Pages:", page);
