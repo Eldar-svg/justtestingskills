@@ -17,7 +17,7 @@ type ToastAction =
   | { type: "LOADED" };
 
 // Тип значения контекста
-interface ToastContextValue {
+export interface ToastContextValue {
   state: ToastState;
   dispatch: React.Dispatch<ToastAction>;
   triggerToast: (message: string, options?: ToastOptions) => void;

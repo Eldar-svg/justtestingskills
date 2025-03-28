@@ -1,20 +1,39 @@
 import EachCoffe from "./EachCoffe";
-import usePaginatedProducts from "../../../hooks/usePaginatedProducts";
+import usePaginatedProducts  from "../../../hooks/usePaginatedProducts";
 import { motion, AnimatePresence } from "framer-motion";
+import { TodoItem } from "../../../hooks/useReduceStates";
+import { InputState } from "../../../hooks/useToggleHook";
+import { DataFromServise } from "../../../hooks/usePaginatedProducts";
+export interface DataContextStart {
+  check: boolean[];
+  logdata: string | null;
+  deleteQuery: string | null;
+  toggleCheck: () => void;
+}
+
+interface MainCoffeStuff extends DataContextStart {
+  inputState: InputState;
+  page: number;
+  ingredientBox: string[];
+}
+
 function MainCoffeList({
   inputState,
   logdata,
   deleteQuery,
   toggleCheck,
   ingredientBox,
-    page
-}) {
-  const { data, error,isLoading } = usePaginatedProducts(page);
-  console.log("Page in Pages:", page)
+  page,
+}: MainCoffeStuff): JSX.Element {
+  const { data, error, isLoading } = usePaginatedProducts(page) as {
+    data: DataFromServise | undefined;
+    error: Error | null;
+    isLoading: boolean;
+  };
+  console.log("Page in Pages:", page);
   const itemVariants = {
     hidden: { opacity: 0, y: 0 },
     visible: { opacity: 1, y: 0 },
-    
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -22,9 +41,8 @@ function MainCoffeList({
   // Проверка ошибки
   if (error) return <div>Error loading data: {error.message}</div>;
 
- 
-  const searchItems = (data) => {
-    const searchUpperCase = inputState.search?.toLowerCase() || "";
+  const searchItems = (data: TodoItem): boolean => {
+    const searchUpperCase = inputState.search?.toString().toLowerCase() || "";
 
     const matchesSearch =
       data.title?.toLowerCase().includes(searchUpperCase) ?? false;
@@ -38,7 +56,6 @@ function MainCoffeList({
 
   return (
     <div
-     
       style={{
         display: "flex",
         flexDirection: "row",
@@ -58,7 +75,7 @@ function MainCoffeList({
             </div>
           )
         )} */}
-        {data.goods
+        {data?.goods
           ?.filter((prevSearch) => searchItems(prevSearch)) // Проверяем наличие данных
           .map((coffe) => (
             <motion.div
@@ -78,7 +95,6 @@ function MainCoffeList({
                 deleteQuery={deleteQuery}
                 toggleCheck={toggleCheck}
               />
-              
             </motion.div>
           ))}
       </AnimatePresence>

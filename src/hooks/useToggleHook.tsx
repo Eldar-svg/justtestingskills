@@ -2,7 +2,7 @@ import { useState } from "react";
 
 type InputValues = string | number | boolean;
 
-interface InputState {
+export interface InputState {
   [key: string]: InputValues;
 }
 

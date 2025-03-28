@@ -1,11 +1,11 @@
 import { createContext, ReactNode, useReducer } from "react";
-type Ingredients = string | number;
+
 export interface TodoItem {
-  id: number;
+  id: string;
   title: string;
-  ingredients: Ingredients[];
+  ingredients: string[];
   description: string;
-  image: string;
+  img: string;
   check?: boolean;
 }
 

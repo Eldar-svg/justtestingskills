@@ -2,15 +2,15 @@ import axios from "axios";
 import { Todocontext, TodoItem } from "./useReduceStates";
 import { useContext } from "react";
 
-interface postDataResult extends TodoItem {
-  error: boolean;
+export interface postDataResult extends TodoItem {
+  error?: boolean;
 }
 
-interface useAxiosFunck {
-  getData: (url: string) => Promise<void>;
-  postData: (url: string, newData: TodoItem) => Promise<void>;
-  deleteData: (url: string, id: number) => Promise<void>;
-  putData: (url: string, id: number, updatedData: TodoItem) => Promise<void>;
+export interface useAxiosFunck {
+  getData: (url: string) => Promise<TodoItem[]>;
+  postData: (url: string, newData: TodoItem, headers:{}) => Promise<void>;
+  deleteData: (url: string, id: string) => Promise<void>;
+  putData: (url: string, id: string, updatedData: TodoItem) => Promise<void>;
 }
 
 const useAxios = (): useAxiosFunck => {
@@ -23,7 +23,7 @@ const useAxios = (): useAxiosFunck => {
 
   const token = localStorage.getItem("token");
 
-  const getData = async (url: string): Promise<void> => {
+  const getData = async (url: string): Promise<TodoItem[]> => {
     try {
       const { data } = await axios.get<TodoItem[]>(url, {
         headers: {
@@ -31,8 +31,10 @@ const useAxios = (): useAxiosFunck => {
         },
       });
       dispatch({ type: "setTodo", payload: data });
+      return data
     } catch (error) {
       console.error("Ошибка при получении данных:", error);
+      throw error
     }
   };
 
@@ -52,7 +54,7 @@ const useAxios = (): useAxiosFunck => {
         title: data.title,
         ingredients: data.ingredients,
         description: data.description,
-        image: data.image,
+        img: data.img,
         check:data.check ?? false
       }; // Убираем check и error
       dispatch({ type: "setTodo", payload: [newTodo, ...todoes] });
@@ -61,7 +63,7 @@ const useAxios = (): useAxiosFunck => {
     }
   };
 
-  const deleteData = async (url: string, id: number): Promise<void> => {
+  const deleteData = async (url: string, id: string): Promise<void> => {
     try {
       await axios.delete<void>(`${url}/${id}`, {
         headers: {
@@ -79,7 +81,7 @@ const useAxios = (): useAxiosFunck => {
 
   const putData = async (
     url: string,
-    id: number,
+    id: string,
     updatedData: TodoItem
   ): Promise<void> => {
     try {
@@ -95,8 +97,10 @@ const useAxios = (): useAxiosFunck => {
           todo.id === id ? { ...todo, ...data } : todo
         ),
       });
+     
     } catch (error) {
       console.error("Ошибка при обновлении данных:", error);
+     
     }
   };
 

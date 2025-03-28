@@ -1,20 +1,21 @@
-import { useQuery } from "react-query";
+import { useQuery,UseQueryResult } from "react-query";
 import axios from "axios";
+import { TodoItem } from "./useReduceStates";
 
-interface DataFromServise {
-  goods: Array<{ id: string; name: string; page: number }>;
+export interface DataFromServise {
+  goods: TodoItem[]
   totalPages: number;
   currentPage: number;
 }
 
-interface usePaginatedData {
+export interface usePaginatedData {
   data: DataFromServise | undefined;
   isLoading: boolean;
   isError: boolean;
   error: unknown | null;
 }
 
-function usePaginatedProducts(page: number): usePaginatedData {
+function usePaginatedProducts(page: number): UseQueryResult<usePaginatedData, Error> {
   return useQuery(
     ["goods", page],
     async (): Promise<DataFromServise> => {

@@ -5,10 +5,10 @@ import useToggleHook from "./useToggleHook";
 
 
 interface useFetchHooksResult {
-  toggleCheck: (id: number, value: boolean) => void;
+  toggleCheck: (id: string, value: boolean) => void;
   selectAllBtn: () => void;
   deleteAll: (e: React.FormEvent) => void;
-  ingredientBox: number[];
+  ingredientBox: string[];
   addImg: (file: string) => void;
 }
 
@@ -22,9 +22,9 @@ function useFetchHooks(): useFetchHooksResult {
   }
 
   const { dispatch } = context
-  const [ingredientBox, setIngredientBox] = useState<number[]>([]);
+  const [ingredientBox, setIngredientBox] = useState<string[]>([]);
 
-  const btntoggleING = (id: number, isChek: boolean): void => {
+  const btntoggleING = (id: string, isChek: boolean): void => {
     if (isChek) {
       setIngredientBox((item) => [...item, id]);
     } else {
@@ -32,7 +32,7 @@ function useFetchHooks(): useFetchHooksResult {
     }
   };
 
-  const toggleCheck = (_id: number, value: boolean): void => {
+  const toggleCheck = (_id: string, value: boolean): void => {
     dispatch({ type: "Toggle", payload: { id: _id, value } });
     btntoggleING(_id, value);
   };
