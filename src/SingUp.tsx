@@ -1,26 +1,40 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios,{AxiosError} from "axios";
 import { useNavigate } from "react-router-dom";
 
-function SingUp() {
-  const [form, setForm] = useState({
+interface SingUpDate{
+  username:string,
+  password:string,
+  role?:string
+}
+
+interface SignUpResponse {
+  username: string;
+  role: string;
+  message?: string; // Опциональное поле для сообщения от сервера
+}
+
+ 
+const SingUp:React.FC =()=> {
+  const [form, setForm] = useState<SingUpDate>({
     username: "",
     password: "",
     role: "user",
   }); // Добавляем поле роли
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false); 
+  const [message, setMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false); 
 const navigator = useNavigate()
-  const handleChange = (e) => {
+
+  const handleChange = (e:React.ChangeEvent<HTMLInputElement>):void => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleRegister = async (e) => {
+  const handleRegister = async (e:React.FormEvent<HTMLFormElement>):Promise<void> => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
+      const response = await axios.post<SignUpResponse>(
         "http://localhost:5000/register",
         form,
         { withCredentials: true }
@@ -28,7 +42,7 @@ const navigator = useNavigate()
       const { username, role } = response.data;
 
       console.log(username,role)
-      setMessage("Registration successful! " + response.data.message);
+      setMessage("Registration successful! " + response?.data?.message);
 
       setTimeout(()=>{
         navigator("/login")
@@ -37,8 +51,9 @@ const navigator = useNavigate()
 
     } catch (err) {
       console.error(err);
+      const Errors=(err as AxiosError<{message?:string}>).response?.data.message
       setMessage(
-        "Registration failed: " + (err.response?.message || err.message)
+        `Registration failed:  ${Errors}`
       );
     } finally {
       setLoading(false);

@@ -1,19 +1,29 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios,{AxiosError} from "axios";
 import { useForm } from "react-hook-form";
 import "./App.css";
 
-function LogIn() {
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+interface FormData {
+  username:string,
+  password:string
+}
+interface FormResponse{
+  role:string,
+  token:string
+}
+
+const LogIn:React.FC=()=>{
+  
+  const [message, setMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setFocus,
-  } = useForm({
+  } = useForm<FormData>({
     defaultValues: {
       username: "",
       password: "",
@@ -26,10 +36,10 @@ function LogIn() {
     setFocus("username");
   }, [setFocus]);
 
-  const handleLogin = async (data) => {
+  const handleLogin= async (data:FormData):Promise<void> => {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:5000/login", data);
+      const response = await axios.post<FormResponse>("http://localhost:5000/login", data);
       const { token, role } = response.data;
 
       // Если сервер не возвращает username, можно не устанавливать его в localStorage.
@@ -46,9 +56,12 @@ function LogIn() {
         navigate("/");
       }
     } catch (err) {
-      const errorMessage = err.response?.data?.message || err.message || "An unknown error occurred";
+      const errorMessage =
+        (err as AxiosError<{ message?: string }>).response?.data?.message ||
+        (err as Error).message ||
+        "An unknown error occurred";
       setMessage(`Login failed: ${errorMessage}`);
-      console.error("Login error: ", err);  // Дополнительное логирование ошибок
+      console.error("Login error: ", err);
     } finally {
       setLoading(false);
     }
@@ -95,5 +108,5 @@ function LogIn() {
     </div>
   );
 }
-
+ 
 export default LogIn;

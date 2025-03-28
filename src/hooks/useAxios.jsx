@@ -78,7 +78,7 @@ const useAxios = () => {
     getData,
     postData,
     deleteData,
-    putData,
+    putData
   };
 };
 

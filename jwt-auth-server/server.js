@@ -168,8 +168,22 @@ app.get("/current-user", verifyToken, (req, res) => {
 });
 
 app.get("/goods", (req, res) => {
-  console.log("Request to goods received, user:", req.title);
-  res.json(goods);
+ 
+  const page = parseInt(req.query.page) || 1; // Текущая страница
+  const limit = parseInt(req.query.limit) || 5; // Количество товаров на странице
+  const startIndex = (page - 1) * limit; // Начальный индекс для среза
+  const endIndex = page * limit; // Конечный индекс для среза
+
+  // Пагинация с учетом текущей страницы и лимита
+  const paginatedProducts = goods.slice(startIndex, endIndex); // Пагинация, срез товаров
+  
+  // Отправка данных с пагинацией
+  res.json({
+    goods: paginatedProducts,
+    totalPages: Math.ceil(goods.length / limit), // Правильное использование массива goods
+    currentPage: page,
+  });
+  
 });
 
 app.get("/goods/:id", async (req, res) => {
@@ -218,6 +232,10 @@ app.delete("/goods/:id", async (req, res) => {
   goods.splice(product, 1);
   res.json(product);
 });
+
+
+
+
 
 // Проверка, загружены ли переменные окружения
 console.log("JWT_SECRET:", process.env.JWT_SECRET);
