@@ -1,8 +1,15 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./Modal.css";
-function Modal({ closeModal, showModal, children }) {
-  const handleBackdropClick = (e) => {
+ 
+export interface ModalResul {
+  closeModal: ()=>void,
+  children:React.ReactNode,
+  showModal:boolean
+}
+
+function Modal({ closeModal, showModal, children }:ModalResul):JSX.Element|null{
+  const handleBackdropClick = (e:React.MouseEvent<HTMLDivElement>):void => {
     if (e.target === e.currentTarget) {
       closeModal();
     }

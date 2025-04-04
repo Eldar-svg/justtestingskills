@@ -6,7 +6,7 @@ export interface InputState {
   [key: string]: InputValues;
 }
 
-interface UseToggleHookReturn {
+export interface UseToggleHookReturn {
   inputState: InputState;
   handlerinput: (key: string, value: InputValues) => void;
   inputToggle: (inputkey: string) => void;

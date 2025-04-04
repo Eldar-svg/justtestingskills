@@ -1,20 +1,30 @@
 import React from "react";
 import Inputs from "./Inputs";
+import { TodoItemInput } from "../../../hooks/useQueryFetch";
+
+export interface InputModalProps {
+  handlePost: (inputState: TodoItemInput) => void; // Используем тип из useQueryFetch
+  handlerinput: (field: string, value: string) => void;
+  addImg: (img: string) => void;
+  inputState: TodoItemInput; // Используем TodoItemInput
+  toCloseModal: () => void;
+
+}
 function InputofModal({
   handlePost,
   handlerinput,
   addImg,
   inputState,
   toCloseModal,
-}) {
+}:InputModalProps):JSX.Element{
   const { title, description, img, ingredients } = inputState;
-  const onChangeInput = (input) => (e) => handlerinput(input, e.target.value);
+  const onChangeInput = (input:string) => (e:React.ChangeEvent<HTMLFormElement>) => handlerinput(input, e.target.value);
 
   return (
     <div>
       <form
-        onSubmit={(e) => {
-          handlePost(inputState, e);
+        onSubmit={() => {
+          handlePost(inputState);
           handlerinput("title", "");
           handlerinput("description", "");
           handlerinput("ingredients", "");

@@ -1,8 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { MainCoffeStuff } from "./MainCoffeList";
 
-import { TodoItem } from "../../../hooks/useReduceStates";
 
 interface EachCoffeProps {
   id: string;

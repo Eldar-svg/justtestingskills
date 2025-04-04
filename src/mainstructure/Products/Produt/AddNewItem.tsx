@@ -1,6 +1,13 @@
 import React from "react";
 import Modal from "./Modal";
 import InputofModal from "./InputofModal";
+import { InputModalProps } from "./InputofModal";
+import { ModalResul } from "./Modal";
+
+export interface AddNameItemResult extends InputModalProps {
+  logdata: string | null;
+  Modal: React.FC<ModalResul>;
+}
 
 function AddNewItem({
   handlePost,
@@ -9,11 +16,9 @@ function AddNewItem({
   logdata,
   toCloseModal,
   inputState,
-}) {
- 
-  return (                        
-    <div >
-     
+}: AddNameItemResult): JSX.Element {
+  return (
+    <div>
       {logdata === "admin" && (
         <>
           <button onClick={toCloseModal}>Add new coffee</button>
@@ -26,8 +31,9 @@ function AddNewItem({
               inputState={inputState}
             />
           </Modal>
-        </>                            
-      )}</div>
+        </>
+      )}
+    </div>
   );
 }
 
