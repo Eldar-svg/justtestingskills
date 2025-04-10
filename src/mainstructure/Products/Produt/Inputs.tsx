@@ -1,13 +1,22 @@
 import React from "react";
 
+interface InputsResult {
+  title: string;
+  description: string;
+  ingredients: string;
+  image: string;
+  onChangeInput: (
+    input: string
+  ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
 function Inputs({
   onChangeInput,
-  addImg,
   title,
   description,
   ingredients,
-  img,
-}) {
+  image,
+}: InputsResult) {
   return (
     <div>
       <p>Title:</p>
@@ -19,7 +28,7 @@ function Inputs({
         type="text"
       />
       <p>Image:</p>
-      <input type="url" value={img} onChange={onChangeInput("img")} />
+      <input type="url" value={image} onChange={onChangeInput("image")} />
 
       <p>Ingred:</p>
       <input

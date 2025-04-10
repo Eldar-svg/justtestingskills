@@ -2,11 +2,11 @@ import EachCoffe from "./EachCoffe";
 import usePaginatedProducts  from "../../../hooks/usePaginatedProducts";
 import { motion, AnimatePresence } from "framer-motion";
 import { TodoItem } from "../../../hooks/useReduceStates";
-import { InputState } from "../../../hooks/useToggleHook";
  import { DataContextStart } from "../../../App";
+import { ListofToggleHook } from "../Produt/ListofToggleHook";
 
 export interface MainCoffeStuff extends DataContextStart {
-  inputState: InputState;
+  inputState: ListofToggleHook;
   page: number;
   ingredientBox: string[];
    
@@ -80,7 +80,7 @@ function MainCoffeList({
             >
               <EachCoffe
                 {...coffe}
-                check={coffe.check}
+                check={coffe.check?? false}
                 key={coffe.id}
                 logdata={logdata}
                 deleteQuery={deleteQuery}

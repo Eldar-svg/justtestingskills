@@ -7,6 +7,7 @@ import { ModalResul } from "./Modal";
 export interface AddNameItemResult extends InputModalProps {
   logdata: string | null;
   Modal: React.FC<ModalResul>;
+   addImg: (file: string) => void;
 }
 
 function AddNewItem({
@@ -27,7 +28,7 @@ function AddNewItem({
               toCloseModal={toCloseModal}
               handlePost={handlePost}
               handlerinput={handlerinput}
-              addImg={addImg}
+          
               inputState={inputState}
             />
           </Modal>
