@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactElement, ReactEventHandler } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Root from "../../../Root";
 import axios from "axios";
@@ -74,7 +74,7 @@ function EditCoffe(): JSX.Element {
   };
 
   return (
-    <div className={styles.body}>
+    <div className={styles.body} >
       <Root />
       <ToastContainer
         stacked
