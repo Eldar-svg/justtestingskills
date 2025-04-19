@@ -1,10 +1,12 @@
 /* Основной стиль страницы */
 body {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    margin: 20px;
+    margin: auto;
     background-color: #fcebeb;
     color: #000000;
     font-size: larger;
+    max-width: 50%;
+    
   }
   
   /* Заголовок */
@@ -18,11 +20,13 @@ body {
   /* Стили формы */
   form {
     max-width: 500px;
-    margin: 0 auto;
+    margin: auto;
+    margin-bottom: 50px;
     background: #54e1b0;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
   }
   
   /* Форм-группы */
@@ -63,7 +67,7 @@ body {
   }
   
   button:hover {
-    background-color: #347237;
+    background-color: #ffffff;
   }
   
   /* Сообщения об ошибках и загрузке */
