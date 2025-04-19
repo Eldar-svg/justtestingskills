@@ -4,8 +4,7 @@ import useToggleHook from "./useToggleHook";
 
 
 
-interface useFetchHooksResult {
-  toggleCheck: (id: string, value: boolean) => void;
+export interface useFetchHooksResult {
   selectAllBtn: () => void;
   deleteAll: (e: React.FormEvent) => void;
   ingredientBox: string[];
@@ -14,7 +13,7 @@ interface useFetchHooksResult {
 
 function useFetchHooks(): useFetchHooksResult {
  
-  const { handlerinput } = useToggleHook();
+  const { handlerinput } = useToggleHook("");
 
   const context = useContext(Todocontext);
   if (!context) {
@@ -32,11 +31,6 @@ function useFetchHooks(): useFetchHooksResult {
     }
   };
 
-  const toggleCheck = (_id: string, value: boolean): void => {
-    dispatch({ type: "Toggle", payload: { id: _id, value } });
-    btntoggleING(_id, value);
-  };
-
   const addImg = (file: string): void => {
     handlerinput("img", file);
   };
@@ -50,7 +44,7 @@ function useFetchHooks(): useFetchHooksResult {
     dispatch({ type: "DeleteSelected" });
   };
 
-  return { toggleCheck, selectAllBtn, deleteAll, ingredientBox, addImg };
+  return { selectAllBtn, deleteAll, ingredientBox, addImg };
 }
 
 export default useFetchHooks;
