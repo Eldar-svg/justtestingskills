@@ -8,19 +8,13 @@ export interface DataFromServise {
   currentPage: number;
 }
 
-export interface usePaginatedData {
-  data: DataFromServise | undefined;
-  isLoading: boolean;
-  isError: boolean;
-  error: unknown | null;
-}
-
-function usePaginatedProducts(page: number): UseQueryResult<DataFromServise, Error> {
+ 
+function usePaginatedProducts(type: "goods"|"ingrid", page?: number ): UseQueryResult<DataFromServise, Error> {
   return useQuery(
-    ["goods", page],
-    async (): Promise<usePaginatedData> => {
-      const { data } = await axios.get<usePaginatedData>(
-        `http://localhost:5000/goods?page=${page}&limit=1`
+    [type, page],
+    async (): Promise<DataFromServise> => {
+      const { data } = await axios.get<DataFromServise>(
+        `http://localhost:5000/${type}?page=${page}&limit=2`
       );
 
       return data; // Здесь возвращаем все данные, включая goods, totalPages и currentPage

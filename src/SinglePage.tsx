@@ -1,54 +1,61 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState, useContext } from "react";
+import { useContext, useState } from "react";
 import Root from "./Root";
-import axios from "axios";
 import EachCoffe from "./mainstructure/Products/coffe-list/EachCoffe";
-import { DataContext } from "./App"; // Импорт контекста
-
+import { DataContext } from "./App";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import axios from "axios";
 import { TodoItem } from "./hooks/useReduceStates";
- 
+import useQueryFetch from "./hooks/useQueryFetch";
 
-const ProductPage = ():JSX.Element => {
-  const { id } = useParams<{id:string}>(); // получаем id из URL
-  const [product, setProduct] = useState<TodoItem|null>(null);
+const ProductPage = (): JSX.Element => {
+  const { id } = useParams<{ id: string }>();
+  const { logdata } = useContext(DataContext);
 
-  // Использование контекста
-  const { check,logdata, deleteQuery, toggleCheck } = useContext(DataContext);
-  useEffect(() => {
-    
-    const fetchProduct = async ():Promise<void> => {
-      try {
-        const response = await axios.get<TodoItem>(`http://localhost:5000/goods/${id}`)
-        setProduct(response.data);
-        console.log(response.data)
-      } catch (error) {
-        console.error("Error fetching product:", error);
-      }
-    };
+  const { deleteQuery, CheckToggle } = useQueryFetch();
 
-    fetchProduct();
-  }, [id]);
-  // Проверяем, что product существует перед деструктуризацией
-  if (!product) {
-    return <div>Loading...</div>; // Показываем сообщение загрузки, пока данные не получены
+  const {
+    data: product,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<TodoItem, Error>({
+    queryKey: ["goods", id],
+    queryFn: async () => {
+      const { data } = await axios.get<TodoItem>(
+        `http://localhost:5000/goods/${id}`
+      );
+      return data;
+    },
+  });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
 
-  const { title, description, ingredients, img } = product;
+  if (isError) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (!product) {
+    return <div>No product found</div>;
+  }
+
+  const { title, description, ingredients, image, check } = product;
 
   return (
-    <div className="App">
+    <div>
       <Root />
- 
       <EachCoffe
-       id={id}
+        id={id!}
         title={title}
         description={description}
         ingredients={ingredients}
-        image={img}
+        image={image}
         logdata={logdata}
         deleteQuery={deleteQuery}
-        toggleCheck={toggleCheck}
-        check={check}
+        check={check} // Передаём текущее состояние чекбокса
+        CheckToggle={CheckToggle} // Передаём функцию для переключения
       />
     </div>
   );

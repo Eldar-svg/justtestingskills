@@ -11,23 +11,26 @@ export interface TodoItem {
 
 export interface TodoState {
   todo: TodoItem[];
-  allSelected: boolean;
 }
 
 interface ContextTodo {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export type TodoAction =
   | { type: "Toggle"; payload: { id: TodoItem["id"]; value: boolean } }
   | { type: "setTodo"; payload: TodoItem[] }
-  | { type: "selectAllBtn" }
   | { type: "DeleteSelected" };
 
-export const Todocontext = createContext<{state:TodoState, dispatch:React.Dispatch<TodoAction>}| undefined> (undefined)
+export const Todocontext = createContext<
+  { state: TodoState; dispatch: React.Dispatch<TodoAction> } | undefined
+>(undefined);
 
-function reducer(state: TodoState, action:TodoAction): TodoState {
+function reducer(state: TodoState, action: TodoAction): TodoState {
   switch (action.type) {
+    case "setTodo":
+      return { ...state, todo: action.payload };
+
     case "Toggle":
       return {
         ...state,
@@ -38,26 +41,18 @@ function reducer(state: TodoState, action:TodoAction): TodoState {
         ),
       };
 
-    case "setTodo":
-      return { ...state, todo: action.payload };
-    case "selectAllBtn":
-      return {
-        ...state,
-        todo: state.todo.map((item) => ({
-          ...item,
-          check: !state.allSelected,
-        })),
-        allSelected: !state.allSelected,
-      };
     case "DeleteSelected":
       return { ...state, todo: state.todo.filter((item) => !item.check) };
+
     default:
       return state;
   }
 }
 
-export default function useReduceStates({ children }:ContextTodo):JSX.Element {
-  const initialState = { todo: [], allSelected: false };
+export default function UseReduceStates({
+  children,
+}: ContextTodo): JSX.Element {
+  const initialState = { todo: [] };
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (

@@ -13,7 +13,7 @@ export interface AddNameItemResult extends InputModalProps {
 function AddNewItem({
   handlePost,
   handlerinput,
-  addImg,
+
   logdata,
   toCloseModal,
   inputState,

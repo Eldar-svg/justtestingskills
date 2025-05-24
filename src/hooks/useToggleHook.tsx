@@ -1,28 +1,30 @@
 import { useState } from "react";
-
+//проанализировать тайпскрипт
 type InputValues = string | number | boolean;
 
-export interface InputState {
-  [key: string]: InputValues;
+export interface UseToggleHookReturn<T> {
+  inputState: T;
+  handlerinput: (field: string, value: InputValues) => void; // Изменено
+  inputToggle: (key: keyof T) => void;
 }
 
-export interface UseToggleHookReturn {
-  inputState: InputState;
-  handlerinput: (key: string, value: InputValues) => void;
-  inputToggle: (inputkey: string) => void;
-}
-function useToggleHook(inisialState: InputState = {}): UseToggleHookReturn {
-  const [inputState, setInputState] = useState<InputState>(inisialState);
+function useToggleHook<T>(initialState: T): UseToggleHookReturn<T> {
+  const [inputState, setInputState] = useState<T>(initialState);
 
-  const handlerinput = (key: string, value: InputValues): void => {
-    setInputState((prev) => {
-      return { ...prev, [key]: value };
-    });
+  const handlerinput = (field: string, value: InputValues): void => {
+    setInputState((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
-  const inputToggle = (inputkey: string): void => {
+  const inputToggle = (key: keyof T): void => {
     setInputState((prev) => {
-      return { ...prev, [inputkey]: !prev[inputkey] };
+      const currentValue = prev[key];
+      if (typeof currentValue === "boolean") {
+        return { ...prev, [key]: !currentValue };
+      }
+      return prev;
     });
   };
 

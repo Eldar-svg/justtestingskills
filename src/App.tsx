@@ -6,40 +6,41 @@ import useQueryFetch from "./hooks/useQueryFetch";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MainFunck from "./mainstructure/Products/Produt/MainFunck";
-import CheckboxIng from "./mainstructure/Products/Produt/CheckboxIng";
+ 
 import MainCoffeList from "./mainstructure/Products/coffe-list/MainCoffeList";
-import Pages from "./mainstructure/PreviousPage/Pagination";
+import Pages from "./mainstructure/Products/coffe-list/Pages";
 import useFetchHooks from "./hooks/useFetchHooks";
-
+import { ListofToggleHook } from "./mainstructure/Products/Produt/ListofToggleHook";
 // Определение интерфейса DataContextStart
 export interface DataContextStart {
-  check?: boolean[]; // Массив булевых значений
+  // Массив булевых значений
   logdata: string | null;
   deleteQuery: ((id: string) => void) | null; // Исправлено для согласованности
-  toggleCheck: (id: string, value: boolean) => void;
+  CheckToggle: (id: string, value: boolean) => void;
 }
 
 // Создание контекста
 export const DataContext = createContext<DataContextStart>({
-  check: [],
+
   logdata: null,
   deleteQuery: null,
-  toggleCheck: () => {},
+  CheckToggle: () => {},
 });
 
 function App(): JSX.Element {
   const [page, setPage] = useState<number>(1);
-  const [check, setCheck] = useState<boolean[]>([]); // Добавлено состояние для check
-  const { handlePost, deleteQuery, fetchAgain } = useQueryFetch();
-  const { toggleCheck, selectAllBtn, deleteAll, ingredientBox, addImg } = useFetchHooks();
+ // Добавлено состояние для check
+  const { handlePost, deleteQuery, fetchAgain,CheckToggle,handleAll,BtnDelete } = useQueryFetch();
+  const { ingredientBox, addImg } = useFetchHooks();
   const reff = useRef<HTMLDivElement | null>(null);
   const logdata = localStorage.getItem("role");
 
-  const { inputToggle, inputState, handlerinput } = useToggleHook({
+  const { inputToggle, inputState, handlerinput } = useToggleHook<ListofToggleHook>({
+    id:"",
     title: "",
     description: "",
     fresh: "",
-    img: "",
+    image: "",
     search: "",
     ingredients: "",
     openSearch: false,
@@ -71,37 +72,38 @@ function App(): JSX.Element {
 
       <Root />
       <MainFunck
+      handlerScrollUp={handlerScrollUp}
         inputToggle={inputToggle}
         handlePost={handlePost}
         handlerinput={handlerinput}
         addImg={addImg}
-        selectAllBtn={selectAllBtn}
         logdata={logdata}
         toCloseModal={toCloseModal}
         fetchAgain={fetchAgain}
-        deleteAll={deleteAll}
+     page={page}
         inputState={inputState}
-        page={page}
+        CheckToggle={CheckToggle}
+        handleAll={handleAll}
+        BtnDelete={BtnDelete}
       />
       <DataContext.Provider
         value={{
-          check,
+          
           logdata,
           deleteQuery,
-          toggleCheck,
+          CheckToggle
         }}
       >
         <Outlet />
       </DataContext.Provider>
-      {/* <CheckboxIng toggleCheck={toggleCheck} /> */}
 
       <MainCoffeList
         inputState={inputState}
         logdata={logdata}
         deleteQuery={deleteQuery}
-        toggleCheck={toggleCheck}
         ingredientBox={ingredientBox}
         page={page}
+        CheckToggle={CheckToggle}
       />
 
       <Pages page={page} handlerScrollUp={handlerScrollUp} /> {/* Убрал setPage */}

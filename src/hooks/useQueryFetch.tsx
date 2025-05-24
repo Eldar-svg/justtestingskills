@@ -1,33 +1,29 @@
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { toast } from "react-toastify";
 import { useContext, useRef } from "react";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import useAxios from "./useAxios"; // Предполагается, что это кастомный хук
-import { ToastContext,ToastContextValue } from "./useToast"; // Контекст для тостов
+import { ToastContext, ToastContextValue } from "./useToast"; // Контекст для тостов
 import { TodoItem } from "./useReduceStates"; // Тип для элемента Todo
-
-
-interface TodoItemInput {
-  id:string;
-  title: string;
-  ingredients: string;
-  description: string;
-  img: string;
-}
+import { ListofToggleHook } from "../mainstructure/Products/Produt/ListofToggleHook";
 
 // Интерфейс для возвращаемого значения хука
-interface UseQueryResults {
+export interface UseQueryResults {
   DataAxios: () => Promise<TodoItem[]>; // Тип возвращаемого значения из getData
-  handlePost: (inputState: TodoItemInput) => void;
-  deleteQuery: ((id: string) => void)|null;
+  handlePost: (inputState: ListofToggleHook) => void;
+  deleteQuery: ((id: string) => void) | null;
   fetchAgain: () => Promise<void>;
   isLoading: boolean;
   isError: boolean;
   handleQuery: (updatedData: TodoItem) => void;
+  CheckToggle: (id: string, value: boolean) => void;
+  BtnDelete: () => void;
+  handleAll: (value: boolean) => void;
+  handleClick:(id:string)=>void
 }
 
 // Тип для контекста ToastContext (предполагаемый)
- 
+
 function useQueryFetch(): UseQueryResults {
   const context = useContext(ToastContext);
 
@@ -37,7 +33,8 @@ function useQueryFetch(): UseQueryResults {
   const { dispatch, triggerToast } = context as ToastContextValue;
 
   const queryClient = useQueryClient();
-  const { getData, postData, deleteData, putData } = useAxios(); // Предполагаем, что useAxios типизирован
+  const { getData, postData, deleteData, putData, dataCheck, AllSelect } =
+    useAxios(); // Предполагаем, что useAxios типизирован
   const token = localStorage.getItem("token"); // string | null
   const isFetching = useRef(false);
 
@@ -73,15 +70,14 @@ function useQueryFetch(): UseQueryResults {
       }),
     {
       onMutate: async (): Promise<void> => {
-        await triggerToast("Adding data...");
+        triggerToast("Adding data...");
       },
       onSuccess: (): void => {
         dispatch({ type: "ADDED" });
         queryClient.invalidateQueries("goods");
       },
       onError: (error: AxiosError<{ message?: string }>): void => {
-        const errorMessage =
-          error.response?.data?.message || error.message;
+        const errorMessage = error.response?.data?.message || error.message;
         console.error("Error occurred:", errorMessage);
         dispatch({
           type: "ERROR_ADDED",
@@ -92,7 +88,8 @@ function useQueryFetch(): UseQueryResults {
   );
 
   const { mutate: deleteItem } = useMutation(
-    (id: string): Promise<void> => deleteData(`http://localhost:5000/goods`, id),
+    (id: string): Promise<void> =>
+      deleteData(`http://localhost:5000/goods`, id),
     {
       onSuccess: (): void => {
         toast.success("Deleted successfully!");
@@ -106,10 +103,10 @@ function useQueryFetch(): UseQueryResults {
 
   const { mutate: updateItem } = useMutation(
     (updatedData: TodoItem): Promise<void> =>
-      putData(`http://localhost:5000/goods`, updatedData.id, updatedData),
+      putData(`http://localhost:5000/goods/`, updatedData.id, updatedData),
     {
       onMutate: async (): Promise<void> => {
-        await triggerToast("Updating data...");
+        triggerToast("Updating data...");
       },
       onSuccess: (): void => {
         dispatch({ type: "LOADED" });
@@ -121,22 +118,92 @@ function useQueryFetch(): UseQueryResults {
       },
     }
   );
+  const { mutate: newCheck } = useMutation(
+    ({ id, value }: { id: string; value: boolean }): Promise<TodoItem> =>
+      dataCheck(`http://localhost:5000/goods`, id, value),
+    {
+      onSuccess: (value: TodoItem): void => {
+        queryClient.invalidateQueries(["goods"]);
+        if (value.check) {
+          toast.success("updated!");
+        } else {
+          toast.success("untoggle");
+        }
+      },
+      onError: (error: Error): void => {
+        console.error("Error in newCheck:", error);
+        toast.error(`Failed to update: ${error.message}`);
+      },
+    }
+  );
 
-  const handlePost = (inputState: TodoItemInput): void => {
-    const { id, title, ingredients, description, img } = inputState;
+  const { mutate: GetAllSelect } = useMutation(
+    ({ value }: { value: boolean }): Promise<TodoItem[]> =>
+      AllSelect("http://localhost:5000/all", value),
+    {
+      onSuccess: (): void => {
+        queryClient.invalidateQueries(["goods"]);
+        toast.success("All items selected!");
+      },
+      onError: (error: AxiosError<{ message?: string }>): void => {
+        const errorMessage = error.response?.data?.message || error.message;
+        console.error("Error in selectAll:", errorMessage);
+        toast.error(` ${errorMessage}`);
+      },
+    }
+  );
+  const handleAll = (value: boolean): void => {
+    GetAllSelect({ value });
+  };
+
+  const { mutate: DeleteAllPosts } = useMutation(
+    async () => {
+      const { data } = await axios.delete("http://localhost:5000/delete");
+      return data;
+    },
+    {
+      onSuccess: () => {                    
+        queryClient.invalidateQueries(["goods"]);
+        toast.success("Все товары удалены");
+      },
+      onError: (error: AxiosError<{ message?: string }>) => {
+        const errorMessage = error.response?.data?.message || error.message;
+        console.error("Ошибка при удалении всех товаров:", errorMessage);
+        toast.error(errorMessage);
+      },
+    }
+  );
+
+  const handlePost = (inputState: ListofToggleHook): void => {
+    const { id, title, ingredients, description, image } = inputState;
     const newTodo: TodoItem = {
       id,
       title,
       ingredients: ingredients
         .split(";")
-        .map((ingredient:string) => ingredient.trim())
-        .filter((ingredient:string) => ingredient !== ""),
+        .map((ingredient: string) => ingredient.trim())
+        .filter((ingredient: string) => ingredient !== ""),
       description,
-      image: img ,
+      image: image,
     };
 
     console.log("Отправляемые данные:", newTodo);
     addData(newTodo);
+  };
+
+  const SinglePageFetch =  useMutation({
+    mutationFn: async (id:string)=>{
+      const {data}= await axios.get<TodoItem>(`http://localhost:5000/goods/${id}`)
+      return data
+    },
+    onSuccess:()=>{
+      queryClient.invalidateQueries({queryKey:"goods"})
+    },
+   
+  })
+ 
+const handleClick = (id:string) => {
+    SinglePageFetch.mutate(id); // Запускаем мутацию
   };
 
   const deleteQuery = (id: string): void => {
@@ -154,11 +221,18 @@ function useQueryFetch(): UseQueryResults {
     isFetching.current = true;
 
     try {
-      await triggerToast("Refreshing data...");
+      triggerToast("Refreshing data...");
       await Refresh();
     } finally {
       isFetching.current = false;
     }
+  };
+  const BtnDelete = () => {
+    DeleteAllPosts();
+  };
+  const CheckToggle = (id: string, value: boolean): void => {
+    newCheck({ id, value });
+    console.log(id, value);
   };
 
   return {
@@ -169,6 +243,10 @@ function useQueryFetch(): UseQueryResults {
     isLoading,
     isError,
     handleQuery,
+    CheckToggle,
+    handleAll,
+    BtnDelete,
+    handleClick
   };
 }
 

@@ -1,8 +1,10 @@
 import React from "react";
 import usePaginatedProducts from "../../../hooks/usePaginatedProducts";
-
+import { useState } from "react";
 interface CheckBoxResult {
   CheckToggle: (id: string, value: boolean) => void;
+  handlerScrollUp: (pageNum: number) => void;
+  page: number;
 }
 
 interface Product {
@@ -11,14 +13,32 @@ interface Product {
   check?: boolean;
 }
 
-function CheckboxIng({ CheckToggle }: CheckBoxResult): JSX.Element {
-  const { data, isLoading, error } = usePaginatedProducts(0);
+function CheckboxIng({
+  CheckToggle,
+  handlerScrollUp,
+  page,
+}: CheckBoxResult): JSX.Element {
+  const [pageIng, setPageIng] = useState(1);
+  const { data, isLoading, error } = usePaginatedProducts("goods", pageIng);
 
+  const handlerPageIng = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    pageNum: number
+  ): void => {
+    e.preventDefault();
+    setPageIng(pageNum);
+  };
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error occurred</div>;
 
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+      <button
+        disabled={pageIng === 1}
+        onClick={(e) => handlerPageIng(e, pageIng - 1)}
+      >
+        Prev
+      </button>
       {data?.goods?.map(({ id, ingredients, check }: Product) => (
         <label
           key={id}
@@ -37,10 +57,10 @@ function CheckboxIng({ CheckToggle }: CheckBoxResult): JSX.Element {
             type="checkbox"
             checked={check ?? false}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              CheckToggle(id, e.target.checked) 
+              CheckToggle(id, e.target.checked)
             }
           />
-          
+
           {ingredients
             ? Array.isArray(ingredients)
               ? ingredients.join(", ")
@@ -48,6 +68,12 @@ function CheckboxIng({ CheckToggle }: CheckBoxResult): JSX.Element {
             : ""}
         </label>
       ))}
+      <button
+        disabled={pageIng === data?.totalPages}
+        onClick={(e) => handlerPageIng(e, pageIng + 1)}
+      >
+        Next
+      </button>
     </div>
   );
 }

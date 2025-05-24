@@ -9,18 +9,19 @@ export interface MainCoffeStuff extends DataContextStart {
   inputState: ListofToggleHook;
   page: number;
   ingredientBox: string[];
-   
+  CheckToggle: (id: string, value: boolean) => void;
+ deleteQuery: ((id: string) => void) | null;
 }
 
 function MainCoffeList({
   inputState,
   logdata,
   deleteQuery,
-  toggleCheck,
-  ingredientBox,
+  CheckToggle,
+   ingredientBox,
   page
 }: MainCoffeStuff): JSX.Element {
-  const { data, error, isLoading } = usePaginatedProducts(page)
+  const { data, error, isLoading } = usePaginatedProducts("goods",page)
   console.log("Page in Pages:", page);
   const itemVariants = {
     hidden: { opacity: 0, y: 0 },
@@ -55,7 +56,7 @@ function MainCoffeList({
       }}
     >
       <AnimatePresence>
-        {/* {data.goods.map(
+        {/* {data?.goods?.map(
           (
             product // Теперь data существует, можно обращаться к products
           ) => (
@@ -80,11 +81,11 @@ function MainCoffeList({
             >
               <EachCoffe
                 {...coffe}
-                check={coffe.check?? false}
+                check={coffe.check ?? false}
                 key={coffe.id}
                 logdata={logdata}
                 deleteQuery={deleteQuery}
-                toggleCheck={toggleCheck}
+                CheckToggle={CheckToggle}
               />
             </motion.div>
           ))}

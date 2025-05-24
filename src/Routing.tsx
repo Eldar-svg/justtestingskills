@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { QueryClient } from "react-query"; // или "@tanstack/react-query"
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import ErrorPage from "./error-page";
@@ -8,23 +8,24 @@ import Home from "./Home";
 import App from "./App";
 import EditCoffe from "./mainstructure/Products/coffe-list/EditCoffe";
 import SingUp from "./SingUp";
-
+import Layout from "./Layout";
 // Интерфейс для пропсов ProtectedRoute
 interface ProtectedRouteProps {
-  element: React.ReactNode;
+  element: ReactElement;
+}
+
+interface RouterReady {
+  clientQ: QueryClient;
+  router: ReturnType<typeof createBrowserRouter>;
 }
 
 // Компонент ProtectedRoute (вынесен наружу)
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
-  const isAuth = !!sessionStorage.getItem("token"); // Преобразуем в boolean
+  const isAuth = !sessionStorage.getItem("token"); // Преобразуем в booleanff
   return isAuth ? element : <Navigate to="/login" />;
 };
 
 // Интерфейс для возвращаемого значения useRouting
-interface RouterReady {
-  clientQ: QueryClient;
-  router: ReturnType<typeof createBrowserRouter>
-}
 
 // Хук useRouting
 function useRouting(): RouterReady {
@@ -58,7 +59,10 @@ function useRouting(): RouterReady {
     },
     {
       path: "/products/:id",
-      element: <ProtectedRoute element={<SinglePage />} />,
+      element: <Layout />,
+      children: [
+        { path: "", element: <ProtectedRoute element={<SinglePage />} /> },
+      ],
       errorElement: <ErrorPage />,
     },
     {
@@ -72,4 +76,3 @@ function useRouting(): RouterReady {
 }
 
 export default useRouting;
- 

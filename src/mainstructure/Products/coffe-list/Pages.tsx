@@ -1,65 +1,41 @@
 import usePaginatedProducts from "../../../hooks/usePaginatedProducts";
-interface PagesUnit {
-  page:number,
-  handlerScrollUp: (pageNum:number )=>void
+
+import { Pagination } from "@mui/material";
+export interface PagesUnit {
+  page: number;
+  handlerScrollUp: (pageNum: number) => void;
 }
 
-function Pages({ page,handlerScrollUp}:PagesUnit):JSX.Element {
-  const { data } = usePaginatedProducts(page);
- 
+function Pages({ page, handlerScrollUp }: PagesUnit): JSX.Element {
+  const { data } = usePaginatedProducts("goods", page);
 
-  if (!data) return <p>Loading...</p>;
+  const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+    handlerScrollUp(value);
+  };
 
   return (
     <>
-      {/* Привязываем ref к элементу, к которому будем прокручивать */}
       <div
-        // Добавляем ref к контейнеру
         style={{
           display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
+          flexDirection: "column",
           alignItems: "center",
-          gap: "10px",
-          maxWidth: "100%",
-          backgroundColor: "pink",
-          padding: "10px",
         }}
       >
-        {/* Генерация кнопок для страниц */}
-        {Array.from({ length: data.totalPages }, (_, i) => i + 1).map(
-          (pageNum) => (
-            <button
-              key={pageNum}
-              onClick={() => handlerScrollUp(pageNum)} // Используем handlerScrollUp
-              style={{
-                width: "50px",
-                padding: "5px",
-                backgroundColor: pageNum === page ? "blue" : "lightblue",
-                color: pageNum === page ? "white" : "black",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              {pageNum}
-            </button>
-          )
-        )}
-        Page {page} of {data.totalPages}
+        <div className="bg-black text-white p-3 m-3 rounded">
+          Hello from Tailwind!
+        </div>
+        <Pagination
+          count={data?.totalPages}
+          page={page}
+          color="primary"
+          variant="outlined"
+          shape="rounded"
+          onChange={handleChange}
+          size="large"
+        />
+        Page {page} of {data?.totalPages}
       </div>
-
-      {/* Кнопки "Назад" и "Вперёд" (если раскомментируете) */}
-      {/* <button disabled={page === 1} onClick={() => handlerScrollUp(page - 1)}>
-        Prev
-      </button>
-      <span> </span>
-      <button
-        disabled={page === data.totalPages}
-        onClick={() => handlerScrollUp(page + 1)}
-      >
-        Next
-      </button> */}
     </>
   );
 }

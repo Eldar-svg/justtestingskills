@@ -1,17 +1,16 @@
 import { NavLink } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-
-
+import { AnimatePresence } from "framer-motion";
+ import CoffeBtns from "./CoffeBtns";
 interface EachCoffeProps {
-  id: string;
+  id?: string;
   title: string;
   ingredients: string[];
   description: string;
   image: string;
-  check: boolean | undefined;
+  check?: boolean;
   logdata: string | null;
-  deleteQuery: ((id: string) => void) | null
-  toggleCheck: (id: string, value: boolean) => void;
+  deleteQuery: ((id: string) => void) | null;
+  CheckToggle?:(id: string, value: boolean) => void
 }
 
 function EachCoffe({
@@ -23,17 +22,10 @@ function EachCoffe({
   check,
   logdata,
   deleteQuery,
-  toggleCheck,
+  CheckToggle
 }: EachCoffeProps): JSX.Element {
   return (
-    <div
-      style={{
-        display: "flex",
-
-        justifyContent: "center", // Центрируем по горизонтали
-        alignItems: "center", // Центрируем по вертикали
-        height: "100vh", // Чтобы центрировать по всей высоте экрана
-      }}
+    <div className=""
     >
       <AnimatePresence>
         <div
@@ -72,8 +64,10 @@ function EachCoffe({
             >
               <input
                 type="checkbox"
-                checked={check}
-                onChange={(e:React.ChangeEvent<HTMLInputElement>):void => toggleCheck(id, e.target.checked)}
+                checked={check ?? false}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+                  CheckToggle!(id!, e.target.checked)
+                }
               />
               <NavLink to={`/products/${id}`} style={{ marginBottom: "10px" }}>
                 Name: {title}
@@ -97,33 +91,7 @@ function EachCoffe({
                   marginTop: "20px",
                 }}
               >
-                {logdata === "admin" && (
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    transition={{ duration: 0.2 }}
-                    onClick={() => deleteQuery?.(id)}
-                    style={{
-                      maxWidth: "50%",
-                    }}
-                  >
-                    Delete
-                  </motion.button>
-                )}
-                {logdata === "admin" && (
-                  <NavLink to={`/products/edit/${id}`}>
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      transition={{ duration: 0.2 }}
-                      style={{
-                        maxWidth: "200%",
-                      }}
-                    >
-                      Edit
-                    </motion.button>
-                  </NavLink>
-                )}
+               <CoffeBtns logdata={logdata} id={id} deleteQuery={deleteQuery}/>
               </div>
             </li>
           </ul>

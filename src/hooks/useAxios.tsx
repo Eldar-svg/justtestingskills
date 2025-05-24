@@ -8,9 +8,15 @@ export interface postDataResult extends TodoItem {
 
 export interface useAxiosFunck {
   getData: (url: string) => Promise<TodoItem[]>;
-  postData: (url: string, newData: TodoItem, headers:{}) => Promise<void>;
+  postData: (url: string, newData: TodoItem, headers: {}) => Promise<void>;
   deleteData: (url: string, id: string) => Promise<void>;
   putData: (url: string, id: string, updatedData: TodoItem) => Promise<void>;
+  dataCheck: (
+    url: string,
+    id: string,
+    value: boolean
+  ) => Promise<TodoItem>;
+  AllSelect:(url:string,check:boolean)=>Promise<TodoItem[]>
 }
 
 const useAxios = (): useAxiosFunck => {
@@ -31,17 +37,14 @@ const useAxios = (): useAxiosFunck => {
         },
       });
       dispatch({ type: "setTodo", payload: data });
-      return data
+      return data;
     } catch (error) {
       console.error("Ошибка при получении данных:", error);
-      throw error
+      throw error;
     }
   };
 
-  const postData = async (
-    url: string,
-    newData: TodoItem
-  ): Promise<void> => {
+  const postData = async (url: string, newData: TodoItem): Promise<void> => {
     try {
       const { data } = await axios.post<postDataResult>(url, newData, {
         headers: {
@@ -55,7 +58,7 @@ const useAxios = (): useAxiosFunck => {
         ingredients: data.ingredients,
         description: data.description,
         image: data.image,
-        check:data.check ?? false
+        check: data.check ?? false,
       }; // Убираем check и error
       dispatch({ type: "setTodo", payload: [newTodo, ...todoes] });
     } catch (error) {
@@ -85,7 +88,7 @@ const useAxios = (): useAxiosFunck => {
     updatedData: TodoItem
   ): Promise<void> => {
     try {
-      const { data } = await axios.put<TodoItem>(`${url}/${id}`, updatedData, {
+      const { data } = await axios.put<TodoItem>(`${url}${id}`, updatedData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -97,18 +100,88 @@ const useAxios = (): useAxiosFunck => {
           todo.id === id ? { ...todo, ...data } : todo
         ),
       });
-     
     } catch (error) {
       console.error("Ошибка при обновлении данных:", error);
-     
     }
   };
 
+  const dataCheck = async (
+    url: string,
+    id: string,
+    check: boolean
+  ): Promise<TodoItem> => {
+    try {
+      if (!url || !id) {
+        throw new Error('URL and ID are required');
+      }
+  
+      const response = await axios.patch<TodoItem>(
+        `${url}/${id}`,
+        { check },
+      
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+     
+     
+      return response.data;
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        console.error('Axios Error:', {
+          status: err.response?.status,
+          data: err.response?.data,
+          message: err.message,
+        });
+        throw new Error(`Failed to update todo: ${err.response?.data?.error || err.message}`);
+      } else {
+        console.error('Unexpected Error:', err);
+        throw new Error('An unexpected error occurred');
+      }
+    }
+  };
+
+  const AllSelect = async (url: string,check:boolean): Promise<TodoItem[]> =>{
+    try {
+      const {data} = await axios.patch<TodoItem[]>(
+        `${url}/check`,
+        {check}, // Пустое тело, так как эндпоинт не требует данных
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+ 
+      return data;
+
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        console.error('Axios Error:', {
+          status: err.response?.status,
+          data: err.response?.data,
+          message: err.message,
+        });
+        throw new Error(`Failed to select all: ${err.response?.data?.error || err.message}`);
+      }
+      console.error('Unexpected Error:', err);
+      throw new Error('An unexpected error occurred');
+    }
+  };
+      
+                                                                                                                    
   return {
     getData,
     postData,
     deleteData,
     putData,
+    dataCheck,
+    AllSelect
   };
 };
 

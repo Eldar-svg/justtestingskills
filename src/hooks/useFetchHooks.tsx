@@ -5,8 +5,7 @@ import useToggleHook from "./useToggleHook";
 
 
 export interface useFetchHooksResult {
-  selectAllBtn: () => void;
-  deleteAll: (e: React.FormEvent) => void;
+ 
   ingredientBox: string[];
   addImg: (file: string) => void;
 }
@@ -20,31 +19,17 @@ function useFetchHooks(): useFetchHooksResult {
     throw new Error("useFetchHooks must be used within a TodoProvider");
   }
 
-  const { dispatch } = context
-  const [ingredientBox, setIngredientBox] = useState<string[]>([]);
 
-  const btntoggleING = (id: string, isChek: boolean): void => {
-    if (isChek) {
-      setIngredientBox((item) => [...item, id]);
-    } else {
-      setIngredientBox((item) => item.filter((_id) => _id !== id));
-    }
-  };
+  const [ingredientBox] = useState<string[]>([]);
+
 
   const addImg = (file: string): void => {
     handlerinput("img", file);
   };
 
-  const selectAllBtn = (): void => {
-    dispatch({ type: "selectAllBtn" });
-  };
 
-  const deleteAll = (e: React.FormEvent): void => {
-    e.preventDefault();
-    dispatch({ type: "DeleteSelected" });
-  };
 
-  return { selectAllBtn, deleteAll, ingredientBox, addImg };
+  return { ingredientBox, addImg };
 }
 
 export default useFetchHooks;

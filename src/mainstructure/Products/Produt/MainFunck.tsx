@@ -5,38 +5,46 @@ import SearchBar from "./SearchBar";
 import Modal from "./Modal";
 import useQueryFetch from "../../../hooks/useQueryFetch";
 import { InputModalProps } from "./InputofModal";
- 
- 
-import { UseQueryResults } from "../../../hooks/useQueryFetch";
 
-interface MainFunctionResult extends InputModalProps, Pick<UseQueryResults, "fetchAgain"> {
-  logdata: string|null;
-  inputToggle: (inputkey: string) => void;
-  deleteAll: (e: React.FormEvent) => void;
-  selectAllBtn: ()=>void
-  
+import { ListofToggleHook } from "./ListofToggleHook";
+
+import { UseQueryResults } from "../../../hooks/useQueryFetch";
+import CheckboxIng from "./CheckboxIng";
+
+interface MainFunctionResult
+  extends InputModalProps,
+    Pick<UseQueryResults, "fetchAgain" | "CheckToggle"> {
+  logdata: string | null;
+  inputToggle: (key: keyof ListofToggleHook) => void;
+  page: number;
+  inputState: ListofToggleHook;
+  addImg: (file: string) => void;
+  handleAll: (value: boolean) => void;
+  BtnDelete: () => void;
+  handlerScrollUp: (pageNum: number) => void;
 }
 
 function MainFunck({
+  page,
   inputToggle,
   handlePost,
   handlerinput,
   addImg,
   logdata,
   toCloseModal,
-  deleteAll,
+  handlerScrollUp,
   fetchAgain,
   inputState,
-  selectAllBtn,
-}: MainFunctionResult):JSX.Element {
- 
+  CheckToggle,
+  handleAll,
+  BtnDelete,
+}: MainFunctionResult): JSX.Element {
   const context = useContext(Todocontext);
   if (!context) {
     throw new Error("useFetchHooks must be used within a TodoProvider");
   }
 
-  const { state } = context
-
+  const { state } = context;
 
   const { isLoading } = useQueryFetch();
 
@@ -84,12 +92,18 @@ function MainFunck({
           <input
             type="checkbox"
             id="d"
-            checked={state.allSelected}
-            onChange={selectAllBtn}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleAll(e.target.checked)
+            }
           />
-          {logdata === "admin" && <button onClick={deleteAll}>Clear</button>}
         </label>
+        <CheckboxIng
+          CheckToggle={CheckToggle}
+          handlerScrollUp={handlerScrollUp}
+          page={page}
+        />
       </form>
+      {logdata === "admin" && <button onClick={BtnDelete}>Clear</button>}
     </div>
   );
 }
