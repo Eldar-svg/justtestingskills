@@ -10,29 +10,34 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-const JWT_SECRET = process.env.JWT_SECRET;
+const ADMIN_USERNAME = "111";
+const ADMIN_PASSWORD = "111";
+const JWT_SECRET = "111";
 app.use(morgan("combined"));
 app.use(
   cors({
     origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
     allowedHeaders: ["Authorization", "Content-Type"],
   })
 );
 
 // Добавляем заголовки CORS для поддержки авторизации
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
 
 app.use(express.json());
 
 const users = []; // Временное хранилище пользователей
-const goods = [];
+const goods = [
+  {
+    id: crypto.randomUUID(),
+    title: "Test Product",
+    ingredients: ["Ingredient 1", "Ingredient 2"],
+    description: "Test Description",
+    image: "",
+    check: false,
+  },
+];
 
 // Middleware для проверки токена
 const verifyToken = (req, res, next) => {
@@ -98,7 +103,8 @@ app.post("/goods", verifyToken, async (req, res) => {
     title,
     ingredients,
     description,
-    image, // Если image пустой, сохраняем как null
+    image,
+    check: false, // Если image пустой, сохраняем как null
   };
 
   goods.push(newGoods);
@@ -166,24 +172,50 @@ app.get("/current-user", verifyToken, (req, res) => {
 
   res.json({ username: user.username, role: user.role });
 });
-
-app.get("/goods", (req, res) => {
- 
-  const page = parseInt(req.query.page) || 1; // Текущая страница
-  const limit = parseInt(req.query.limit) || 5; // Количество товаров на странице
+const Numbers = (array, page = 1, limit = 5) => {
   const startIndex = (page - 1) * limit; // Начальный индекс для среза
   const endIndex = page * limit; // Конечный индекс для среза
+  const paginatedData = array.slice(startIndex, endIndex);
+  totalPages = Math.ceil(array.length / limit);
 
-  // Пагинация с учетом текущей страницы и лимита
-  const paginatedProducts = goods.slice(startIndex, endIndex); // Пагинация, срез товаров
-  
-  // Отправка данных с пагинацией
-  res.json({
-    goods: paginatedProducts,
-    totalPages: Math.ceil(goods.length / limit), // Правильное использование массива goods
+  return {
+    data: paginatedData,
+    totalPages,
     currentPage: page,
+  };
+};
+app.get("/goods", (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+
+  const { data, totalPages, currentPage } = Numbers(goods, page, limit);
+
+  res.json({
+    goods: data,
+    totalPages: totalPages,
+    currentPage: currentPage,
   });
-  
+});
+
+app.get("/ingrid", (req, res) => {
+  const allIngredients = goods.map((item) =>
+    Array.isArray(item.ingredients) ? item.ingredients : [item.ingredients]
+  );
+
+  const uniqueIngredients = [...new Set(allIngredients)];
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+
+  const { totalPages, currentPage } = Numbers(uniqueIngredients, page, limit);
+  res.json({
+    goods: paginatedIngredients.map((ingredient, index) => ({
+      id: index + startIndex + 1 + "",
+      ingredients: ingredient,
+    })),
+    totalPages: totalPages,
+    currentPage: currentPage,
+  });
 });
 
 app.get("/goods/:id", async (req, res) => {
@@ -233,9 +265,52 @@ app.delete("/goods/:id", async (req, res) => {
   res.json(product);
 });
 
+app.delete("/delete", async (req, res) => {
+  goods.length = 0; // Очищаем массив
+  res.json({ message: "All products deleted successfully" });
+});
 
+app.patch("/goods/:id", verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const { check } = req.body; // Fix: Extract check from body
 
+  if (typeof check !== "boolean") {
+    return res.status(400).json({ error: "Check must be a boolean" });
+  }
 
+  const checkItem = goods.find((item) => item.id === id);
+  if (!checkItem) {
+    return res.status(404).json({ error: "Product not found" });
+  }
+
+  // Update the item in place
+  const updatedItem = { ...checkItem, check };
+  const index = goods.findIndex((item) => item.id === id);
+  goods[index] = updatedItem;
+
+  res.json(updatedItem); // Return single object
+});
+
+app.patch("/all/check", verifyToken, async (req, res) => {
+  console.log("Received PATCH /goods/check with body:", req.body);
+  const { check } = req.body;
+  if (typeof check !== "boolean") {
+    return res.status(400).json({ error: "Check must be a boolean" });
+  }
+  try {
+    console.log("Current goods:", goods);
+    if (!Array.isArray(goods) || goods.length === 0) {
+      console.log("No goods found, returning empty array");
+      return res.status(200).json([]);
+    }
+    const updatedData = goods.map((item) => ({ ...item, check }));
+    goods.splice(0, goods.length, ...updatedData);
+    res.json(updatedData);
+  } catch (error) {
+    console.error("Error in /goods/check:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 // Проверка, загружены ли переменные окружения
 console.log("JWT_SECRET:", process.env.JWT_SECRET);
