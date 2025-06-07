@@ -1,17 +1,29 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@layer components {
+  .btn {
+    @apply bg-blue-500 p-[10px] rounded-full w-[200px] font-bold uppercase  transition delay-150 duration-300 ease-in-out hover:-translate-y-2 hover:scale-110 hover:bg-blue-500/50;
+  }
+  .backgound {
+    @apply flex flex-col justify-center  bg-white min-h-screen items-center;
+  }
+  .input {
+    @apply text-black p-2 border-2 border-gray-700 focus:border-pink-600 selection:bg-blue-500;
+  }
+  .rootbtn {
+    @apply text-white bg-red-800 rounded-lg shadow-lg p-2 m-1 hover:bg-red-500;
+  }
+  .mainbtn {
+    @apply text-white bg-red-700 hover:bg-red-400 hover:text-black min-w-[150px] uppercase font-bold p-2 mx-auto rounded-2xl;
+  } .inputbtn{
+    @apply p-2 rounded-xl border-2 border-black
+  }
+  .arrow{
+   @apply bg-blue-400 rounded-[1000px] p-2 hover:cursor-pointer hover:bg-blue-300 transition delay-300 hover:translate-x-1 hover:scale-110
+  }
 }
