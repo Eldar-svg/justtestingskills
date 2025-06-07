@@ -7,10 +7,12 @@ export interface TodoItem {
   description: string;
   image: string;
   check?: boolean;
+
 }
 
+ 
 export interface TodoState {
-  todo: TodoItem[];
+  goods: TodoItem[];
 }
 
 interface ContextTodo {
@@ -29,12 +31,12 @@ export const Todocontext = createContext<
 function reducer(state: TodoState, action: TodoAction): TodoState {
   switch (action.type) {
     case "setTodo":
-      return { ...state, todo: action.payload };
+      return { ...state, goods: action.payload };
 
     case "Toggle":
       return {
         ...state,
-        todo: state.todo.map((item) =>
+        goods: state.goods.map((item) =>
           item.id === action.payload.id
             ? { ...item, check: action.payload.value }
             : item
@@ -42,7 +44,7 @@ function reducer(state: TodoState, action: TodoAction): TodoState {
       };
 
     case "DeleteSelected":
-      return { ...state, todo: state.todo.filter((item) => !item.check) };
+      return { ...state, goods: state.goods.filter((item) => !item.check) };
 
     default:
       return state;
@@ -52,7 +54,7 @@ function reducer(state: TodoState, action: TodoAction): TodoState {
 export default function UseReduceStates({
   children,
 }: ContextTodo): JSX.Element {
-  const initialState = { todo: [] };
+  const initialState = { goods: [] };
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
