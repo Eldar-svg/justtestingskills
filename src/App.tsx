@@ -1,6 +1,6 @@
 import Root from "./Root";
 import useToggleHook from "./hooks/useToggleHook";
-
+ 
 import { useRef, useState, createContext } from "react";
 import useQueryFetch from "./hooks/useQueryFetch";
 import { ToastContainer } from "react-toastify";
@@ -11,14 +11,13 @@ import MainCoffeList from "./mainstructure/Products/coffe-list/MainCoffeList";
 import Pages from "./mainstructure/Products/coffe-list/Pages";
 import useFetchHooks from "./hooks/useFetchHooks";
 import { ListofToggleHook } from "./mainstructure/Products/Produt/ListofToggleHook";
-// Определение интерфейса DataContextStart
+ 
 export interface DataContextStart {
-  // Массив булевых значений
+ 
   logdata: string | null;
 
 }
-
-// Создание контекста
+ 
 export const DataContext = createContext<DataContextStart>({
   logdata: null
 
@@ -26,7 +25,7 @@ export const DataContext = createContext<DataContextStart>({
 
 function App(): JSX.Element {
   const [page, setPage] = useState<number>(1);
-  // Добавлено состояние для check
+ 
   const {
     handlePost,
     deleteQuery,
@@ -64,8 +63,8 @@ function App(): JSX.Element {
   const toCloseModal = () => inputToggle("CloseModal");
 
   return (
-    <div ref={reff} className="App">
-      <ToastContainer
+    <>
+    <ToastContainer
         stacked
         position="top-right"
         autoClose={5000}
@@ -74,7 +73,10 @@ function App(): JSX.Element {
         closeOnClick
         rtl={false}
       />
+      <div ref={reff}  >
+      <div >
       <Root />
+      
       <MainFunck
         handlerScrollUp={handlerScrollUp}
         inputToggle={inputToggle}
@@ -100,8 +102,8 @@ function App(): JSX.Element {
         CheckToggle={CheckToggle}
       />
       <Pages page={page} handlerScrollUp={handlerScrollUp} />{" "}
-      {/* Убрал setPage */}
-    </div>
+</div>
+    </div></>
   );
 }
 
