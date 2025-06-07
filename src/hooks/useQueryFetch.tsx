@@ -19,7 +19,6 @@ export interface UseQueryResults {
   CheckToggle: (id: string, value: boolean) => void;
   BtnDelete: () => void;
   handleAll: (value: boolean) => void;
-  handleClick:(id:string)=>void
 }
 
 // Тип для контекста ToastContext (предполагаемый)
@@ -184,27 +183,13 @@ function useQueryFetch(): UseQueryResults {
         .map((ingredient: string) => ingredient.trim())
         .filter((ingredient: string) => ingredient !== ""),
       description,
-      image: image,
+      image: image || "https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg",
     };
 
     console.log("Отправляемые данные:", newTodo);
     addData(newTodo);
   };
 
-  const SinglePageFetch =  useMutation({
-    mutationFn: async (id:string)=>{
-      const {data}= await axios.get<TodoItem>(`http://localhost:5000/goods/${id}`)
-      return data
-    },
-    onSuccess:()=>{
-      queryClient.invalidateQueries({queryKey:"goods"})
-    },
-   
-  })
- 
-const handleClick = (id:string) => {
-    SinglePageFetch.mutate(id); // Запускаем мутацию
-  };
 
   const deleteQuery = (id: string): void => {
     if (window.confirm("Are you sure you want to delete this item?")) {
@@ -246,7 +231,7 @@ const handleClick = (id:string) => {
     CheckToggle,
     handleAll,
     BtnDelete,
-    handleClick
+ 
   };
 }
 
