@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext,useEffect } from "react";
 import { Todocontext } from "../../../hooks/useReduceStates";
 import AddNewItem from "./AddNewItem";
 import SearchBar from "./SearchBar";
@@ -9,9 +9,10 @@ import { InputModalProps } from "./InputofModal";
 import { ListofToggleHook } from "./ListofToggleHook";
 
 import { UseQueryResults } from "../../../hooks/useQueryFetch";
-import CheckboxIng from "./CheckboxIng";
+import usePaginatedProducts from "../../../hooks/usePaginatedProducts";
+import Checkboxs from "./Checkboxs";
 
-interface MainFunctionResult
+export interface MainFunctionResult
   extends InputModalProps,
     Pick<UseQueryResults, "fetchAgain" | "CheckToggle"> {
   logdata: string | null;
@@ -39,29 +40,21 @@ function MainFunck({
   handleAll,
   BtnDelete,
 }: MainFunctionResult): JSX.Element {
+
+    const { data } = usePaginatedProducts("goods",page)
+
   const context = useContext(Todocontext);
   if (!context) {
     throw new Error("useFetchHooks must be used within a TodoProvider");
   }
+ 
 
-  const { state } = context;
-
+   console.log()
   const { isLoading } = useQueryFetch();
 
   return (
-    <div>
-      <div
-        style={{
-          gap: "20px",
-          justifyContent: "center",
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          backgroundColor: "yellow",
-          padding: "30px",
-          marginBottom: "20px",
-        }}
-      >
+    <div className="flex w-full max-w-[1000px] mx-auto p-1 mb-6  gap-5 mt-[70px]">
+      <div className=" w-full flex flex-col text-center bg-opacity-[70%] bg-red-300  p-5 shadow-xl  gap-2 rounded-2xl ">
         <AddNewItem
           handlePost={handlePost}
           handlerinput={handlerinput}
@@ -71,39 +64,30 @@ function MainFunck({
           Modal={Modal}
           inputState={inputState}
         />
-        <>
-          <SearchBar
-            inputState={inputState}
-            handlerinput={handlerinput}
-            inputToggle={inputToggle}
-          />
-        </>
-        <button
-          style={{ maxWidth: "10%" }}
-          onClick={fetchAgain}
-          disabled={isLoading}
-        >
-          {state.todo.length === 0 ? "Request Data" : "Refresh"}
+
+        <SearchBar
+          inputState={inputState}
+          handlerinput={handlerinput}
+          inputToggle={inputToggle}
+        />
+
+        <button className="mainbtn" onClick={fetchAgain} disabled={isLoading}>
+          {data?.goods.length ? "Refresh": "Request Data" }
         </button>
       </div>
-      <form>
-        <label htmlFor="d">
-          Choose All:
-          <input
-            type="checkbox"
-            id="d"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handleAll(e.target.checked)
-            }
-          />
-        </label>
-        <CheckboxIng
+
+      {data?.goods.length ? (
+          <Checkboxs
+          logdata={logdata}
           CheckToggle={CheckToggle}
+          handleAll={handleAll}
+          BtnDelete={BtnDelete}
           handlerScrollUp={handlerScrollUp}
           page={page}
         />
-      </form>
-      {logdata === "admin" && <button onClick={BtnDelete}>Clear</button>}
+      ) : (
+      <p>gg</p>
+      )}
     </div>
   );
 }
