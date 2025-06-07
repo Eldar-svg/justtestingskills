@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import Root from "./Root";
 import EachCoffe from "./mainstructure/Products/coffe-list/EachCoffe";
 import { DataContext } from "./App";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import axios from "axios";
 import { TodoItem } from "./hooks/useReduceStates";
 import useQueryFetch from "./hooks/useQueryFetch";
