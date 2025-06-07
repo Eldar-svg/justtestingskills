@@ -8,21 +8,22 @@ export interface AddNameItemResult extends InputModalProps {
   logdata: string | null;
   Modal: React.FC<ModalResul>;
    addImg: (file: string) => void;
+ 
 }
 
 function AddNewItem({
   handlePost,
   handlerinput,
-
+ 
   logdata,
   toCloseModal,
   inputState,
 }: AddNameItemResult): JSX.Element {
   return (
-    <div>
+    <div  >
       {logdata === "admin" && (
         <>
-          <button onClick={toCloseModal}>Add new coffee</button>
+          <button className="mainbtn" onClick={toCloseModal}>Add new coffee</button>
           <Modal closeModal={toCloseModal} showModal={inputState.CloseModal}>
             <InputofModal
               toCloseModal={toCloseModal}
