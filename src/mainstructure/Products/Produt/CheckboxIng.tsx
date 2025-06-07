@@ -14,7 +14,7 @@ interface Product {
 }
 
 function CheckboxIng({ CheckToggle }: CheckBoxResult): JSX.Element {
-  const [pageIng, setPageIng] = useState(1);
+  const [pageIng, setPageIng] = useState<number>(1);
   const { data, isLoading, error } = usePaginatedProducts("goods", pageIng);
 
   const handlerPageIng = (
@@ -42,10 +42,10 @@ function CheckboxIng({ CheckToggle }: CheckBoxResult): JSX.Element {
 
       </button>
       {data?.goods?.map(({ id, ingredients, check }: Product) => (
-        <label
+        <label className="flex justify-center items-center flex-colm"
           key={id}         
         >
-          <input
+          <input 
             type="checkbox"
             checked={check ?? false}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

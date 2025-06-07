@@ -1,5 +1,6 @@
 import React from "react";
 import { ListofToggleHook } from "./ListofToggleHook";
+import { motion } from "framer-motion";
 type InputValues = string | number;
 interface SearchProps {
   inputState: ListofToggleHook;
@@ -16,9 +17,9 @@ function SearchBar({
   const { openSearch, search } = inputState;
   return (
     <div>
-      <button className="mainbtn" onClick={(): void => inputToggle("openSearch")}>
+      <motion.button whileTap={{ scale: 0.9 }} className="mainbtn" onClick={(): void => inputToggle("openSearch")}>
         {openSearch ? "close" : "Search bar"}
-      </button>
+      </motion.button>
       {openSearch ? (
         <input 
         className=" ml-1 p-2 "

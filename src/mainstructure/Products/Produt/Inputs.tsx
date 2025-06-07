@@ -18,28 +18,28 @@ function Inputs({
   image,
 }: InputsResult) {
   return (
-    <div>
-      <p>Title:</p>
-      <input value={title} onChange={onChangeInput("title")} type="text" />
+    <div className="text-xl flex flex-col " >
+      <div ><p>Title:</p>
+      <input className="inputbtn w-full" value={title} onChange={onChangeInput("title")} type="text" />
       <p>Description:</p>
-      <input
+      <input className="inputbtn w-full"
         value={description}
         onChange={onChangeInput("description")}
         type="text"
       />
       <p>Image:</p>
-      <input type="url" value={image} onChange={onChangeInput("image")} />
+      <input className="inputbtn w-full" type="url" value={image} onChange={onChangeInput("image")} />
 
       <p>Ingred:</p>
-      <input
+      <input className="inputbtn w-full"
         value={ingredients}
         onChange={onChangeInput("ingredients")}
         type="text"
       />
 
-      <p>
-        <button type="submit">Add</button>
-      </p>
+      
+        <button className="mt-5 mainbtn transition delay-150 duration-300 ease-in-out hover:-translate-y-2 hover:scale-110 easy-in hover:drop-shadow-md" type="submit">Add</button>
+      </div>
     </div>
   );
 }

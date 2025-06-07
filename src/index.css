@@ -24,6 +24,8 @@
     @apply p-2 rounded-xl border-2 border-black
   }
   .arrow{
-   @apply bg-blue-400 rounded-[1000px] p-2 hover:cursor-pointer hover:bg-blue-300 transition delay-300 hover:translate-x-1 hover:scale-110
+   @apply  rounded-[1000px] p-2 hover:cursor-pointer hover:bg-blue-300 transition delay-300 hover:translate-x-1 hover:scale-100
   }
+  
 }
+

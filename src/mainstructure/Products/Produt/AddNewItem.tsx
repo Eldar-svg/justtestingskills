@@ -3,6 +3,7 @@ import Modal from "./Modal";
 import InputofModal from "./InputofModal";
 import { InputModalProps } from "./InputofModal";
 import { ModalResul } from "./Modal";
+import { motion } from "framer-motion";
 
 export interface AddNameItemResult extends InputModalProps {
   logdata: string | null;
@@ -23,7 +24,7 @@ function AddNewItem({
     <div  >
       {logdata === "admin" && (
         <>
-          <button className="mainbtn" onClick={toCloseModal}>Add new coffee</button>
+          <motion.button whileTap={{ scale: 0.9 }} className="mainbtn" onClick={toCloseModal}>Add new coffee</motion.button>
           <Modal closeModal={toCloseModal} showModal={inputState.CloseModal}>
             <InputofModal
               toCloseModal={toCloseModal}

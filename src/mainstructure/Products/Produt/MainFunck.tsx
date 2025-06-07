@@ -7,7 +7,7 @@ import useQueryFetch from "../../../hooks/useQueryFetch";
 import { InputModalProps } from "./InputofModal";
 
 import { ListofToggleHook } from "./ListofToggleHook";
-
+import { motion } from "framer-motion";
 import { UseQueryResults } from "../../../hooks/useQueryFetch";
 import usePaginatedProducts from "../../../hooks/usePaginatedProducts";
 import Checkboxs from "./Checkboxs";
@@ -54,7 +54,7 @@ function MainFunck({
 
   return (
     <div className="flex w-full max-w-[1000px] mx-auto p-1 mb-6  gap-5 mt-[70px]">
-      <div className=" w-full flex flex-col text-center bg-opacity-[70%] bg-red-300  p-5 shadow-xl  gap-2 rounded-2xl ">
+      <div className=" w-full flex flex-col text-center bg-opacity-100 bg-red-300  p-5 shadow-xl  gap-2 rounded-2xl ">
         <AddNewItem
           handlePost={handlePost}
           handlerinput={handlerinput}
@@ -71,9 +71,9 @@ function MainFunck({
           inputToggle={inputToggle}
         />
 
-        <button className="mainbtn" onClick={fetchAgain} disabled={isLoading}>
+        <motion.button whileTap={{ scale: 0.9 }} className="mainbtn" onClick={fetchAgain} disabled={isLoading}>
           {data?.goods.length ? "Refresh": "Request Data" }
-        </button>
+        </motion.button>
       </div>
 
       {data?.goods.length ? (
@@ -86,7 +86,7 @@ function MainFunck({
           page={page}
         />
       ) : (
-      <p>gg</p>
+      null
       )}
     </div>
   );

@@ -20,8 +20,8 @@ function InputofModal({
   const onChangeInput = (input:string) => (e:React.ChangeEvent<HTMLInputElement>) => handlerinput(input, e.target.value);
 
   return (
-    <div>
-      <form
+    <div >
+      <form 
         onSubmit={() => {
           handlePost(inputState);
           handlerinput("title", "");
