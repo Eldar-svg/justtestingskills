@@ -1,23 +1,19 @@
-import { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import axios,{AxiosError} from "axios";
+import { useEffect } from "react";
+import { NavLink } from "react-router-dom";
+
 import { useForm } from "react-hook-form";
-import "./App.css";
 
-interface FormData {
-  username:string,
-  password:string
+import useLogInHook from "./hooks/useLogInHook";
+export interface FormData {
+  username: string;
+  password: string;
 }
-interface FormResponse{
-  role:string,
-  token:string
+export interface FormResponse {
+  role: string;
+  token: string;
 }
 
-const LogIn:React.FC=()=>{
-  
-  const [message, setMessage] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-
+const LogIn: React.FC = () => {
   const {
     register,
     handleSubmit,
@@ -30,58 +26,28 @@ const LogIn:React.FC=()=>{
     },
   });
 
-  const navigate = useNavigate();
-
+  const { message, loading, handleLogin } = useLogInHook();
   useEffect(() => {
     setFocus("username");
   }, [setFocus]);
-
-  const handleLogin= async (data:FormData):Promise<void> => {
-    setLoading(true);
-    try {
-      const response = await axios.post<FormResponse>("http://localhost:5000/login", data);
-      const { token, role } = response.data;
-
-      // Если сервер не возвращает username, можно не устанавливать его в localStorage.
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", role);
-      
-      console.log(token);
-      setMessage(`Logged in successfully as ${role}`);
-
-      // Навигация в зависимости от роли
-      if (role === "admin") {
-        navigate("/products");
-      } else {
-        navigate("/");
-      }
-    } catch (err) {
-      const errorMessage =
-        (err as AxiosError<{ message?: string }>).response?.data?.message ||
-        (err as Error).message ||
-        "An unknown error occurred";
-      setMessage(`Login failed: ${errorMessage}`);
-      console.error("Login error: ", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   return (
-    <div className="App">
+    <div className="backgound">
+      <h2 className=" bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-5xl font-extrabold text-transparent  ">
+        Welcome to website!
+      </h2>
       <form onSubmit={handleSubmit(handleLogin)}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100vh",
-            flexDirection: "column",
-            flex: "1",
-          }}
-        >
-          <h2>Login</h2>
+        <div className="flex flex-col justify-center items-center bg-red-900 text-white min-w-[600px] p-6 m-6 gap-5 rounded-lg   shadow-2xl">
+          <img
+            src="./coffee-shop-logos-design-template-cda8575e146cc5ba17cd3c1a24d65ba1_screen.jpg"
+            alt="alt"
+            className="rounded-[600px] 
+ max-w-[240px] mt-9 shadow-xl mask-origin-border "
+          />
+
           <input
+            className="input"
             {...register("username", { required: "Username is required" })}
             type="text"
             placeholder="Username"
@@ -89,24 +55,28 @@ const LogIn:React.FC=()=>{
           {errors.username && <p>{errors.username.message}</p>}
 
           <input
+            className="input"
             {...register("password", { required: "Password is required" })}
             type="password"
             placeholder="Password"
           />
           {errors.password && <p>{errors.password.message}</p>}
 
-          <button type="submit" disabled={loading}>
+          <button className="btn" type="submit" disabled={loading}>
+          
             {loading ? "Logging in..." : "Login"}
           </button>
 
           {message && <p>{message}</p>}
           <NavLink to="/signup">
-            <button type="button">Sign Up</button>
+            <button className="btn" type="button">
+              Sign Up
+            </button>
           </NavLink>
         </div>
       </form>
     </div>
   );
-}
- 
+};
+
 export default LogIn;
