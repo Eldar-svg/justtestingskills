@@ -9,7 +9,10 @@ module.exports = {
       },
       fontFamily: {
         oswald: ["Oswald", "sans-serif"],
-      }
+      },
+      colors: {
+        'black-blue': 'rgba(0, 0, 0, 0.54)',
+      },
     },
   },
   plugins: [],
