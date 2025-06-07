@@ -34,7 +34,7 @@ const goods = [
     title: "Test Product",
     ingredients: ["Ingredient 1", "Ingredient 2"],
     description: "Test Description",
-    image: "",
+    image: "https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg",
     check: false,
   },
 ];
