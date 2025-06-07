@@ -1,11 +1,12 @@
-import React from "react";
+ 
 import Root from "./Root";
 
-function Home():JSX.Element {
+function Home(): JSX.Element {
+  
   return (
     <div className="App">
       <Root />
-      <div style={{ width: "50%", margin: "auto" }as React.CSSProperties}>
+      <div className=" max-w-[1000px]  bg- mx-auto  bg-red-400 shadow-lg rounded-lg p-2 m-2">
         Welcome to Café YOU! Cafe YOU logo w RESTAURANTCafe YOU Hours: Monday to
         Saturday: 7:45 AM to 3:30 PM. Kitchen closes at 3 PM. If you are coming
         with a group of more than 6 people please make a reservation –
@@ -23,7 +24,7 @@ function Home():JSX.Element {
         Our food is all natural, simple food made with local ingredients,
         wherever possible, to provide you with fresher, healthier and
         deliciously tasty meals. We have a well stocked pastry cabinet, our food
-        has an international flavor and we offer gluten free, vegetarian and
+        has an international flavor and we offer gluten free, vegetarian and  
         vegan options. Café YOU Events & Private Functions – We host monthly
         wine dinners, chefs’ tasting dinners and more. We also enjoy hosting
         your special occasions – whether baby showers, anniversaries, birthdays,
