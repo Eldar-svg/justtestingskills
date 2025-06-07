@@ -15,8 +15,9 @@ function ErrorPage(): JSX.Element {
       : "Unknow error";
 
   return (
-    <div>
-      <div id="error-page">
+    <div className=" ">
+      <div className="flex flex-col justify-center text-center text-7xl text-red-600 space-y-5 font-bold bg-amber-100 min-h-screen ">
+<img className="mx-auto max-w-[200px]" src="https://www.freeiconspng.com/thumbs/error-icon/error-icon-4.png" alt="alt" />
         <h1>Oops!</h1>
         <p>Sorry, an unexpected error has occurred.</p>
         <p>
