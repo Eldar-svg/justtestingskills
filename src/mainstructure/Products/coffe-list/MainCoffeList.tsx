@@ -13,6 +13,7 @@ export interface MainCoffeStuff extends DataContextStart {
  deleteQuery: ((id: string) => void) | null;
 }
 
+
 function MainCoffeList({
   inputState,
   logdata,
@@ -28,6 +29,9 @@ function MainCoffeList({
     visible: { opacity: 1, y: 0 },
   };
 
+
+
+  
   if (isLoading) return <div>Loading...</div>;
 
   // Проверка ошибки
@@ -56,17 +60,7 @@ function MainCoffeList({
       }}
     >
       <AnimatePresence>
-        {/* {data?.goods?.map(
-          (
-            product // Теперь data существует, можно обращаться к products
-          ) => (
-            <div key={product.id}>
-              <h3>{product.title}</h3>
-              <p>{product.description}</p>
-               
-            </div>
-          )
-        )} */}
+       
         {data?.goods
           ?.filter((prevSearch) => searchItems(prevSearch)) // Проверяем наличие данных
           .map((coffe) => (
