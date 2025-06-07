@@ -9,7 +9,7 @@ import App from "./App";
 import EditCoffe from "./mainstructure/Products/coffe-list/EditCoffe";
 import SingUp from "./SingUp";
 import Layout from "./Layout";
-// Интерфейс для пропсов ProtectedRoute
+
 interface ProtectedRouteProps {
   element: ReactElement;
 }
@@ -19,20 +19,18 @@ interface RouterReady {
   router: ReturnType<typeof createBrowserRouter>;
 }
 
-// Компонент ProtectedRoute (вынесен наружу)
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
-  const isAuth = !sessionStorage.getItem("token"); // Преобразуем в booleanff
-  return isAuth ? element : <Navigate to="/login" />;
-};
+function ProtectedRoute({ element }: ProtectedRouteProps): JSX.Element {
+  const isAuth = !sessionStorage.getItem("token"); 
+  return isAuth ? element : <Navigate to="/login" replace />;
+}
 
-// Интерфейс для возвращаемого значения useRouting
 
-// Хук useRouting
+
 function useRouting(): RouterReady {
   const clientQ = new QueryClient({
     defaultOptions: {
       queries: {
-        refetchOnWindowFocus: false, // Опционально, как ты делал раньше
+        refetchOnWindowFocus: false, 
       },
     },
   });
