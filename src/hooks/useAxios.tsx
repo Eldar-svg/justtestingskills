@@ -25,7 +25,7 @@ const useAxios = (): useAxiosFunck => {
     throw new Error("useFetchHooks must be used within a TodoProvider");
   }
   const { state, dispatch } = context;
-  const todoes: TodoItem[] = state.todo; // Исправлен тип
+  const todoes: TodoItem[] = state.goods; // Исправлен тип
 
   const token = localStorage.getItem("token");
 
