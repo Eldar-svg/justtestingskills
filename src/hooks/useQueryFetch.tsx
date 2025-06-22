@@ -3,13 +3,21 @@ import { toast } from "react-toastify";
 import { useContext, useRef } from "react";
 import axios, { AxiosError } from "axios";
 import useAxios from "./useAxios"; // Предполагается, что это кастомный хук
-import { ToastContext, ToastContextValue } from "./useToast"; // Контекст для тостов
+// import { ToastContext, ToastContextValue } from "./useToast"; // Контекст для тостов
 import { TodoItem } from "./useReduceStates"; // Тип для элемента Todo
 import { ListofToggleHook } from "../mainstructure/Products/Produt/ListofToggleHook";
-
-// Интерфейс для возвращаемого значения хука
+import { useDispatch } from "react-redux";
+import {
+  setToastId,
+  success,
+  error,
+  secondError,
+  added,
+  loaded,
+} from "../redux/ToastSlice";
+ 
 export interface UseQueryResults {
-  DataAxios: () => Promise<TodoItem[]>; // Тип возвращаемого значения из getData
+  DataAxios: () => Promise<TodoItem[]>;
   handlePost: (inputState: ListofToggleHook) => void;
   deleteQuery: ((id: string) => void) | null;
   fetchAgain: () => Promise<void>;
@@ -21,23 +29,20 @@ export interface UseQueryResults {
   handleAll: (value: boolean) => void;
 }
 
-// Тип для контекста ToastContext (предполагаемый)
-
 function useQueryFetch(): UseQueryResults {
-  const context = useContext(ToastContext);
+  const dispath = useDispatch();
 
-  if (!context) {
-    throw new Error("useFetchHooks must be used within a TodoProvider");
-  }
-  const { dispatch, triggerToast } = context as ToastContextValue;
+  const trigger = (message:string) => {
+    const toastId = crypto.randomUUID()
+    dispath(setToastId({ id: toastId, message}));
+  };
 
   const queryClient = useQueryClient();
   const { getData, postData, deleteData, putData, dataCheck, AllSelect } =
-    useAxios(); // Предполагаем, что useAxios типизирован
-  const token = localStorage.getItem("token"); // string | null
+    useAxios();
+  const token = localStorage.getItem("token");
   const isFetching = useRef(false);
 
-  // Функция для получения данных
   function DataAxios(): Promise<TodoItem[]> {
     return getData("http://localhost:5000/goods");
   }
@@ -52,10 +57,10 @@ function useQueryFetch(): UseQueryResults {
     refetchOnWindowFocus: false,
     onSuccess: (): void => {
       console.log("Data successfully fetched");
-      dispatch({ type: "SUCCESS" });
+      dispath(success());
     },
     onError: (): void => {
-      dispatch({ type: "ERROR" });
+      dispath(error());
     },
   });
 
@@ -69,22 +74,20 @@ function useQueryFetch(): UseQueryResults {
       }),
     {
       onMutate: async (): Promise<void> => {
-        triggerToast("Adding data...");
+trigger('Adding')
+
       },
       onSuccess: (): void => {
-        dispatch({ type: "ADDED" });
+        dispath(added());
         queryClient.invalidateQueries("goods");
       },
       onError: (error: AxiosError<{ message?: string }>): void => {
         const errorMessage = error.response?.data?.message || error.message;
         console.error("Error occurred:", errorMessage);
-        dispatch({
-          type: "ERROR_ADDED",
-          payload: { message: errorMessage },
-        });
-      },
+        dispath(secondError({ message: errorMessage }));
+ 
     }
-  );
+});
 
   const { mutate: deleteItem } = useMutation(
     (id: string): Promise<void> =>
@@ -105,10 +108,10 @@ function useQueryFetch(): UseQueryResults {
       putData(`http://localhost:5000/goods/`, updatedData.id, updatedData),
     {
       onMutate: async (): Promise<void> => {
-        triggerToast("Updating data...");
+        trigger('Uptaaaded')
       },
       onSuccess: (): void => {
-        dispatch({ type: "LOADED" });
+        dispath(loaded());
         queryClient.invalidateQueries("goods");
       },
       onError: (error: Error): void => {
@@ -161,7 +164,7 @@ function useQueryFetch(): UseQueryResults {
       return data;
     },
     {
-      onSuccess: () => {                    
+      onSuccess: () => {
         queryClient.invalidateQueries(["goods"]);
         toast.success("Все товары удалены");
       },
@@ -183,13 +186,14 @@ function useQueryFetch(): UseQueryResults {
         .map((ingredient: string) => ingredient.trim())
         .filter((ingredient: string) => ingredient !== ""),
       description,
-      image: image || "https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg",
+      image:
+        image ||
+        "https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg",
     };
 
     console.log("Отправляемые данные:", newTodo);
     addData(newTodo);
   };
-
 
   const deleteQuery = (id: string): void => {
     if (window.confirm("Are you sure you want to delete this item?")) {
@@ -206,7 +210,7 @@ function useQueryFetch(): UseQueryResults {
     isFetching.current = true;
 
     try {
-      triggerToast("Refreshing data...");
+      trigger('refreshhh')
       await Refresh();
     } finally {
       isFetching.current = false;
@@ -231,7 +235,6 @@ function useQueryFetch(): UseQueryResults {
     CheckToggle,
     handleAll,
     BtnDelete,
- 
   };
 }
 

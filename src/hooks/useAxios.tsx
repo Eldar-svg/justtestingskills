@@ -1,7 +1,9 @@
 import axios from "axios";
-import { Todocontext, TodoItem } from "./useReduceStates";
-import { useContext } from "react";
+import { TodoItem } from "./useReduceStates";
 
+import { useDispatch, useSelector } from "react-redux";
+import { setTodo, deleteSelectedTodo } from "../redux/TodoSlices";
+import { RootState } from "../redux/store";
 export interface postDataResult extends TodoItem {
   error?: boolean;
 }
@@ -11,21 +13,13 @@ export interface useAxiosFunck {
   postData: (url: string, newData: TodoItem, headers: {}) => Promise<void>;
   deleteData: (url: string, id: string) => Promise<void>;
   putData: (url: string, id: string, updatedData: TodoItem) => Promise<void>;
-  dataCheck: (
-    url: string,
-    id: string,
-    value: boolean
-  ) => Promise<TodoItem>;
-  AllSelect:(url:string,check:boolean)=>Promise<TodoItem[]>
+  dataCheck: (url: string, id: string, value: boolean) => Promise<TodoItem>;
+  AllSelect: (url: string, check: boolean) => Promise<TodoItem[]>;
 }
 
 const useAxios = (): useAxiosFunck => {
-  const context = useContext(Todocontext);
-  if (!context) {
-    throw new Error("useFetchHooks must be used within a TodoProvider");
-  }
-  const { state, dispatch } = context;
-  const todoes: TodoItem[] = state.goods; // Исправлен тип
+  const dispatch = useDispatch();
+  const goods = useSelector((state: RootState) => state.newAct.goods);
 
   const token = localStorage.getItem("token");
 
@@ -36,7 +30,8 @@ const useAxios = (): useAxiosFunck => {
           Authorization: `Bearer ${token}`,
         },
       });
-      dispatch({ type: "setTodo", payload: data });
+
+      dispatch(setTodo(goods));
       return data;
     } catch (error) {
       console.error("Ошибка при получении данных:", error);
@@ -59,8 +54,8 @@ const useAxios = (): useAxiosFunck => {
         description: data.description,
         image: data.image,
         check: data.check ?? false,
-      }; // Убираем check и error
-      dispatch({ type: "setTodo", payload: [newTodo, ...todoes] });
+      };
+      dispatch(setTodo([newTodo, ...goods]));
     } catch (error) {
       console.error("Ошибка при отправке данных:", error);
     }
@@ -73,10 +68,7 @@ const useAxios = (): useAxiosFunck => {
           Authorization: `Bearer ${token}`,
         },
       });
-      dispatch({
-        type: "setTodo",
-        payload: todoes.filter((todo) => todo.id !== id),
-      });
+      dispatch(deleteSelectedTodo());
     } catch (error) {
       console.error("Ошибка при удалении данных:", error);
     }
@@ -94,12 +86,11 @@ const useAxios = (): useAxiosFunck => {
           "Content-Type": "application/json",
         },
       });
-      dispatch({
-        type: "setTodo",
-        payload: todoes.map((todo) =>
-          todo.id === id ? { ...todo, ...data } : todo
-        ),
-      });
+      dispatch(
+        setTodo(
+          goods.map((todo) => (todo.id === id ? { ...todo, ...data } : todo))
+        )
+      );
     } catch (error) {
       console.error("Ошибка при обновлении данных:", error);
     }
@@ -112,76 +103,79 @@ const useAxios = (): useAxiosFunck => {
   ): Promise<TodoItem> => {
     try {
       if (!url || !id) {
-        throw new Error('URL and ID are required');
+        throw new Error("URL and ID are required");
       }
-  
+
       const response = await axios.patch<TodoItem>(
         `${url}/${id}`,
         { check },
-      
+
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
-  
-     
-     
+
       return response.data;
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        console.error('Axios Error:', {
+        console.error("Axios Error:", {
           status: err.response?.status,
           data: err.response?.data,
           message: err.message,
         });
-        throw new Error(`Failed to update todo: ${err.response?.data?.error || err.message}`);
+        throw new Error(
+          `Failed to update todo: ${err.response?.data?.error || err.message}`
+        );
       } else {
-        console.error('Unexpected Error:', err);
-        throw new Error('An unexpected error occurred');
+        console.error("Unexpected Error:", err);
+        throw new Error("An unexpected error occurred");
       }
     }
   };
 
-  const AllSelect = async (url: string,check:boolean): Promise<TodoItem[]> =>{
+  const AllSelect = async (
+    url: string,
+    check: boolean
+  ): Promise<TodoItem[]> => {
     try {
-      const {data} = await axios.patch<TodoItem[]>(
+      const { data } = await axios.patch<TodoItem[]>(
         `${url}/check`,
-        {check}, // Пустое тело, так как эндпоинт не требует данных
+        { check },
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
- 
-      return data;
 
+      return data;
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        console.error('Axios Error:', {
+        console.error("Axios Error:", {
           status: err.response?.status,
           data: err.response?.data,
           message: err.message,
         });
-        throw new Error(`Failed to select all: ${err.response?.data?.error || err.message}`);
+        throw new Error(
+          `Failed to select all: ${err.response?.data?.error || err.message}`
+        );
       }
-      console.error('Unexpected Error:', err);
-      throw new Error('An unexpected error occurred');
+      console.error("Unexpected Error:", err);
+      throw new Error("An unexpected error occurred");
     }
   };
-      
-                                                                                                                    
+
   return {
     getData,
     postData,
     deleteData,
     putData,
     dataCheck,
-    AllSelect
+    AllSelect,
   };
 };
 
