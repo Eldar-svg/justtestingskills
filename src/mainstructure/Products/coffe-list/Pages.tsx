@@ -15,16 +15,7 @@ function Pages({ page, handlerScrollUp }: PagesUnit): JSX.Element {
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <div className="bg-black text-white p-3 m-3 rounded">
-          Hello from Tailwind!
-        </div>
+      <div className="flex flex-col bg-white items-center justify-center max-w-[500px] mx-auto p-5 rounded-2xl">
         <Pagination
           count={data?.totalPages}
           page={page}
