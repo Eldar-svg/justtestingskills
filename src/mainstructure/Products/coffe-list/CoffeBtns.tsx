@@ -1,6 +1,6 @@
-import React from "react";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
+
 interface CoffeBtnsAction {
   logdata: String | null;
   id?: string;
@@ -10,7 +10,6 @@ interface CoffeBtnsAction {
 function CoffeBtns({ logdata, id, deleteQuery }: CoffeBtnsAction) {
   return (
     <div>
-      {" "}
       {logdata === "admin" && (
         <>
           <motion.button
