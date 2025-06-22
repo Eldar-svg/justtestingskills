@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es6", // Updated for modern browsers
+    "module": "esnext", // Better for Vite/React
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "dist", // Output .js files to dist
+    "sourceMap": true, // For debugging
+    "baseUrl": ".", // Simplify imports
+    "paths": {
+      "*": ["src/*"] // Optional: simplifies imports like 'components/MyComponent'
+    }
+  },
+  "include": ["src/**/*", "src/declarations.d.ts"],
+  "exclude": ["node_modules", "dist"]
+}
