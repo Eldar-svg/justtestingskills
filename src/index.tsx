@@ -2,29 +2,34 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { RouterProvider } from "react-router-dom";
- 
+
 import UseReduceStates from "./hooks/useReduceStates";
 import reportWebVitals from "./reportWebVitals";
 import { QueryClientProvider } from "react-query";
 import useRouting from "./Routing";
 import ToastProvider from "./hooks/useToast";
-const Main : React.FC = () => {
- 
-
+import { Provider } from "react-redux";
+import store from "./redux/store"
+const Main: React.FC = () => {
   const { clientQ, router } = useRouting(); // Хук вызывается внутри компонента
   return (
-    <div className="font-oswald box-border m-0 bg-coffee-s bg-repeat bg-auto min-h-screen" ><QueryClientProvider client={clientQ}>
-      <ToastProvider>
-        <UseReduceStates>
-          <RouterProvider router={router}/>
- 
-        </UseReduceStates>
-      </ToastProvider>
-    </QueryClientProvider></div>
+    <div className="font-oswald box-border m-0 bg-coffee-s bg-repeat bg-auto min-h-screen">
+      <QueryClientProvider client={clientQ}>
+        <ToastProvider>
+          <UseReduceStates>
+            <Provider store={store}>
+              <RouterProvider router={router} />
+            </Provider>
+          </UseReduceStates>
+        </ToastProvider>
+      </QueryClientProvider>
+    </div>
   );
 };
 
-const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
 
 root.render(
   <React.StrictMode>
