@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
- import CoffeBtns from "./CoffeBtns";
+import CoffeBtns from "./CoffeBtns";
 interface EachCoffeProps {
   id?: string;
   title: string;
@@ -10,7 +10,7 @@ interface EachCoffeProps {
   check?: boolean;
   logdata: string | null;
   deleteQuery: ((id: string) => void) | null;
-  CheckToggle?:(id: string, value: boolean) => void
+  CheckToggle?: (id: string, value: boolean) => void;
 }
 
 function EachCoffe({
@@ -22,81 +22,48 @@ function EachCoffe({
   check,
   logdata,
   deleteQuery,
-  CheckToggle
+  CheckToggle,
 }: EachCoffeProps): JSX.Element {
   return (
-    <div className=""
-    >
+      
+    <div className="flex justify-center items-center">
+ 
       <AnimatePresence>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row", // Выравниваем элементы по вертикали
-            alignItems: "center", // Центрируем дочерние элементы по горизонтали
-            maxWidth: "100%",
-            borderRadius: "10px",
-            backgroundColor: "pink",
-            padding: "20px", // Отступы для удобства
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Тень для улучшения визуала
-          }}
-        >
-          <ul
-            style={{
-              display: "flex",
-              flexDirection: "column", // Выравниваем список по вертикали
-              listStyle: "none",
-              justifyContent: "center",
-              alignItems: "center", // Центрируем элементы списка
-              width: "100%",
-            }}
-          >
-            <li
-              style={{
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "column", // Изменил на column, чтобы элементы шли вертикально
-                maxWidth: "100%",
-                borderRadius: "10px",
-                backgroundColor: "pink",
-                padding: "10px", // Добавил немного отступов для улучшения внешнего вида
-              }}
-              key={id}
-            >
-              <input
-                type="checkbox"
-                checked={check ?? false}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-                  CheckToggle!(id!, e.target.checked)
-                }
-              />
-              <NavLink to={`/products/${id}`} style={{ marginBottom: "10px" }}>
-                Name: {title}
-              </NavLink>
-              <p>Description: {description}</p>
-              <img
-                style={{
-                  width: "300px",
-                  height: "300px",
-                  marginBottom: "10px", // Добавил отступы для визуальной красоты
-                }}
-                src={image}
-                alt={title}
-              />
-              <p>Ingredients: {ingredients}</p>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  width: "100%",
-                  marginTop: "20px",
-                }}
-              >
-               <CoffeBtns logdata={logdata} id={id} deleteQuery={deleteQuery}/>
-              </div>
-            </li>
-          </ul>
+        <div  >
+        
+            <ul className="flex flex-col">
+                 
+              <li className="p-10 bg-blue-500 rounded-2xl" key={id}>
+                <input
+                  id="input1"
+                  type="checkbox"
+                  checked={check ?? false}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+                    CheckToggle!(id!, e.target.checked)
+                  }
+                />  
+                <NavLink
+                  to={`/products/${id}`}
+                  style={{ marginBottom: "10px" }}
+                >
+                  Name: {title}
+                </NavLink>
+                <img className="max-w-[300px] p-1 m-2 float-left" src={image} alt={title} />
+                <p>Description: {description}</p>
+               
+                <p>Ingredients: {ingredients}</p>
+                <div>
+                  <CoffeBtns
+                    logdata={logdata}
+                    id={id}
+                    deleteQuery={deleteQuery}
+                  />
+                </div>
+          </li>
+            </ul>
+          
         </div>
-      </AnimatePresence>
+      </AnimatePresence> 
     </div>
   );
 }
