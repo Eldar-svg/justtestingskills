@@ -8,8 +8,8 @@
 
 # testing
 /coverage
-jwt-auth-server/.env
- 
+.env
+.
 # production
 /build
 .touch.env

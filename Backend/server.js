@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const crypto = require("crypto");
-const morgan = require("morgan");
 dotenv.config();
 
 const app = express();
@@ -13,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 const ADMIN_USERNAME = "111";
 const ADMIN_PASSWORD = "111";
 const JWT_SECRET = "111";
-app.use(morgan("combined"));
+
 app.use(
   cors({
     origin: "http://localhost:3000",
