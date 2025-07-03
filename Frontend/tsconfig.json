@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "module": "esnext",
+    "moduleResolution": "bundler", // Для Vite, или "node" для CRA
     "jsx": "react-jsx",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -11,10 +12,9 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "*": ["src"]
+      "*": ["src/*"]
     },
     "allowJs": true,
-    "checkJs": false,
     "lib": ["dom", "dom.iterable", "esnext"]
   },
   "include": ["src/**/*", "declarations.d.ts"],

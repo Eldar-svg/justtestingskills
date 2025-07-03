@@ -52,12 +52,7 @@ function MainCoffeList({
 
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        flexWrap: "wrap",
-      }}
+     className="flex space-x-5 justify-center"
     >
       <AnimatePresence>
        
@@ -71,7 +66,7 @@ function MainCoffeList({
               animate="visible"
               exit="exit"
               transition={{ duration: 0.5 }}
-              className="p-4 mb-2 bg-gray-100 rounded shadow"
+              className="  p-4 mb-5 bg-gray-100 rounded shadow"
             >
               <EachCoffe
                 {...coffe}

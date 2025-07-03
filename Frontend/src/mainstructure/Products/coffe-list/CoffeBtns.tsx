@@ -11,7 +11,7 @@ function CoffeBtns({ logdata, id, deleteQuery }: CoffeBtnsAction) {
   return (
     <div>
       {logdata === "admin" && (
-        <>
+        <div className="flex space-x-5 ">
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -20,6 +20,7 @@ function CoffeBtns({ logdata, id, deleteQuery }: CoffeBtnsAction) {
             style={{
               maxWidth: "50%",
             }}
+            
           >
             Delete
           </motion.button>
@@ -36,7 +37,7 @@ function CoffeBtns({ logdata, id, deleteQuery }: CoffeBtnsAction) {
               Edit
             </motion.button>
           </NavLink>
-        </>
+        </div>
       )}
     </div>
   );
