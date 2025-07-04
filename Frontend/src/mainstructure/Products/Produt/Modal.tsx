@@ -38,10 +38,10 @@ function Modal({
          
          
         
-          <div className="bg-white p-10 m-10 relative rounded-2xl shadow-xl max-w-md w-full">
+          <div className="relative bg-white p-10 m-10 rounded-2xl shadow-xl max-w-[500px] w-full">
             <button
               onClick={closeModal}
-              className="absolute top-3 right-3 hover:animate-pulse"
+              className="absolute top-3 right-3 hover:animate-bounce"
               aria-label="Закрыть модальное окно"
             >
              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 ">

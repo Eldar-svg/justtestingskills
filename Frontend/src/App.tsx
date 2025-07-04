@@ -74,7 +74,7 @@ function App(): JSX.Element {
         rtl={false}
       />
       <div ref={reff}  >
-      <div >
+       
       <Root />
       
       <MainFunck
@@ -101,9 +101,9 @@ function App(): JSX.Element {
         page={page}
         CheckToggle={CheckToggle}
       />
-      <Pages page={page} handlerScrollUp={handlerScrollUp} />{" "}
+      <Pages page={page} handlerScrollUp={handlerScrollUp} /> 
 </div>
-    </div></>
+     </>
   );
 }
 

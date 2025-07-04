@@ -15,7 +15,7 @@ function Pages({ page, handlerScrollUp }: PagesUnit): JSX.Element {
 
   return (
     <>
-      <div className="flex flex-col bg-white items-center justify-center max-w-[500px] mx-auto p-5 rounded-2xl">
+      <div className="flex flex-col bg-black items-center justify-center max-w-[500px] mx-auto m-2 p-5  rounded-2xl">
         <Pagination
           count={data?.totalPages}
           page={page}
