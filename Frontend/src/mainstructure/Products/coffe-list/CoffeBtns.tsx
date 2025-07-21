@@ -11,7 +11,7 @@ function CoffeBtns({ logdata, id, deleteQuery }: CoffeBtnsAction) {
   return (
     <div>
       {logdata === "admin" && (
-        <div className="flex space-x-5 ">
+        <div className="flex items-center justify-center space-x-5 ">
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -20,12 +20,14 @@ function CoffeBtns({ logdata, id, deleteQuery }: CoffeBtnsAction) {
             style={{
               maxWidth: "50%",
             }}
+            className="mainbtn"
+            
             
           >
             Delete
           </motion.button>
 
-          <NavLink to={`/products/edit/${id}`}>
+          <NavLink to={`/products/edit-product/${id}`}>
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
@@ -33,6 +35,7 @@ function CoffeBtns({ logdata, id, deleteQuery }: CoffeBtnsAction) {
               style={{
                 maxWidth: "200%",
               }}
+              className="mainbtn"
             >
               Edit
             </motion.button>

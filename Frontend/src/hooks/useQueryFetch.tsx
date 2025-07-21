@@ -15,7 +15,7 @@ import {
   added,
   loaded,
 } from "../redux/ToastSlice";
- 
+
 export interface UseQueryResults {
   DataAxios: () => Promise<TodoItem[]>;
   handlePost: (inputState: ListofToggleHook) => void;
@@ -32,9 +32,9 @@ export interface UseQueryResults {
 function useQueryFetch(): UseQueryResults {
   const dispath = useDispatch();
 
-  const trigger = (message:string) => {
-    const toastId = crypto.randomUUID()
-    dispath(setToastId({ id: toastId, message}));
+  const trigger = (message: string) => {
+    const toastId = crypto.randomUUID();
+    dispath(setToastId({ id: toastId, message }));
   };
 
   const queryClient = useQueryClient();
@@ -74,8 +74,7 @@ function useQueryFetch(): UseQueryResults {
       }),
     {
       onMutate: async (): Promise<void> => {
-trigger('Adding')
-
+        trigger("Adding");
       },
       onSuccess: (): void => {
         dispath(added());
@@ -85,9 +84,9 @@ trigger('Adding')
         const errorMessage = error.response?.data?.message || error.message;
         console.error("Error occurred:", errorMessage);
         dispath(secondError({ message: errorMessage }));
- 
+      },
     }
-});
+  );
 
   const { mutate: deleteItem } = useMutation(
     (id: string): Promise<void> =>
@@ -108,7 +107,7 @@ trigger('Adding')
       putData(`http://localhost:5000/goods/`, updatedData.id, updatedData),
     {
       onMutate: async (): Promise<void> => {
-        trigger('Uptaaaded')
+        trigger("Uptaaaded");
       },
       onSuccess: (): void => {
         dispath(loaded());
@@ -210,7 +209,7 @@ trigger('Adding')
     isFetching.current = true;
 
     try {
-      trigger('refreshhh')
+      trigger("refreshhh");
       await Refresh();
     } finally {
       isFetching.current = false;

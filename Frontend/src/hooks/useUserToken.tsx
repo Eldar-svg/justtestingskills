@@ -27,44 +27,43 @@ function useUserToken(): FetchedData {
 
     setIsLoggedIn(true);
     setRole(storedRole ?? "");
-let isMounted = true
-const control = new AbortController()
+    let isMounted = true;
+    const control = new AbortController();
     // Получаем данные пользователя
-   const fetchUserData = async () => {
-    try {
-      const response = await axios.get<FetchedData>(
-        "http://localhost:5000/current-user",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          signal: control.signal,
-        }
-      );
-      if (isMounted) {
-        setUsername(response.data.username);
-      }
-    } catch (err) {
-    
-      const error = err as AxiosError<{ message?: string }>;
-      if (isMounted) {
-        setErrorMessage(
-          error.response?.data?.message ||
-            "Error fetching user data. Please log in again."
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get<FetchedData>(
+          "http://localhost:5000/current-user",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            signal: control.signal,
+          }
         );
-        console.error("Error fetching user data:", error);
-        navigate("/login");
+        if (isMounted) {
+          setUsername(response.data.username);
+        }
+      } catch (err) {
+        const error = err as AxiosError<{ message?: string }>;
+        if (isMounted) {
+          setErrorMessage(
+            error.response?.data?.message ||
+              "Error fetching user data. Please log in again."
+          );
+          console.error("Error fetching user data:", error);
+          navigate("/login");
+        }
       }
-    }
-  };
+    };
 
-  fetchUserData();
+    fetchUserData();
 
-  return () => {
-    isMounted = false;
-    control.abort();
-  };
-}, [token, storedRole]);
+    return () => {
+      isMounted = false;
+      control.abort();
+    };
+  }, [token, storedRole]);
 
   const handleLogOut = (): void => {
     localStorage.removeItem("token");
