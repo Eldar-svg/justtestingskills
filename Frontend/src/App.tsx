@@ -74,7 +74,7 @@ function App(): JSX.Element {
         rtl={false}
       />
       <div ref={reff}  >
-       
+      <div >
       <Root />
       
       <MainFunck
@@ -103,7 +103,7 @@ function App(): JSX.Element {
       />
       <Pages page={page} handlerScrollUp={handlerScrollUp} /> 
 </div>
-     </>
+    </div></>
   );
 }
 

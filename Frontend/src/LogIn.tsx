@@ -30,7 +30,6 @@ const LogIn: React.FC = () => {
   useEffect(() => {
     setFocus("username");
   }, [setFocus]);
-  
 
   return (
     <div className="backgound">
@@ -40,7 +39,7 @@ const LogIn: React.FC = () => {
       <form onSubmit={handleSubmit(handleLogin)}>
         <div className="flex flex-col justify-center items-center bg-red-900 text-white min-w-[600px] p-6 m-6 gap-5 rounded-lg   shadow-2xl">
           <img
-            src="./coffee-shop-logos-design-template-cda8575e146cc5ba17cd3c1a24d65ba1_screen.jpg"
+            src="./coffee-shop-logos-design-template.jpg"
             alt="alt"
             className="rounded-[600px] 
  max-w-[240px] mt-9 shadow-xl mask-origin-border "
@@ -63,7 +62,6 @@ const LogIn: React.FC = () => {
           {errors.password && <p>{errors.password.message}</p>}
 
           <button className="btn" type="submit" disabled={loading}>
-          
             {loading ? "Logging in..." : "Login"}
           </button>
 

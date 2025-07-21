@@ -13,7 +13,7 @@ import store from "./redux/store"
 const Main: React.FC = () => {
   const { clientQ, router } = useRouting(); // Хук вызывается внутри компонента
   return (
-    <div className="font-oswald box-border m-0 bg-coffee-s bg-repeat bg-auto min-h-screen">
+    <div className="font-oswald box-border m-0 bg-coffee-s   min-h-screen">
       <QueryClientProvider client={clientQ}>
         <ToastProvider>
           <UseReduceStates>

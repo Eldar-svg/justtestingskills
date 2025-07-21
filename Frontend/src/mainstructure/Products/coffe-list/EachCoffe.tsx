@@ -36,51 +36,53 @@ function EachCoffe({
         >
           <ul className=" w-full flex  ">
             <li
-              className="p-5 bg-blue-600 max-w-[500px]   rounded-2xl text-white text-xl space-y-5 "
+              className="flex flex-col p-5 bg-blue-600 max-w-[500px]   rounded-2xl text-white text-xl space-y-5 "
               key={id}
             >
-                 <input
-                id={`input-${id}`}
-                type="checkbox"
-                checked={check ?? false}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                  if (CheckToggle && id) {
-                    CheckToggle(id, e.target.checked);
-                  }
-                }}
-                className="h-5 w-5"
-              />
-                    <NavLink
-                to={`/products/${id}`}
-                className="  hover:underline "
-              >
-                <span className="break-words">{title}</span>
-              </NavLink>
-              <p className=" float-left transition ease-in-out hover:-translate-y-1 hover:scale-110  ">
-                <img
-                  className="max-w-[300px]  m-5   "
-                  src={image}
-                  alt={title}
+              <div className="">
+                {" "}
+                <input
+                  id={`input-${id}`}
+                  type="checkbox"
+                  checked={check ?? false}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                    if (CheckToggle && id) {
+                      CheckToggle(id, e.target.checked);
+                    }
+                  }}
+                  className="h-5 w-5 "
                 />
-              </p>
-            
-           
-
-          
-
-              <p className="break-words mb-3">
-                <span>Description:</span> {description}
-              </p>
-              <p className="break-words">
-                <span className="">Ingredients:</span> {ingredients.join(", ")}
-              </p>
-              <div className="mt-4">
-                <CoffeBtns
-                  logdata={logdata}
-                  id={id}
-                  deleteQuery={deleteQuery}
-                />
+                <NavLink
+                  to={`/products/${id}`}
+                  className=" w-full hover:underline "
+                >
+                  <span className="flex items-center justify-center break-words">
+                    {title}
+                  </span>
+                </NavLink>
               </div>
+
+              <div >
+               
+                <p className=" float-left transition ease-in-out hover:-translate-y-1 hover:scale-110  ">
+                  <img
+                    className="max-w-[300px]  m-5   "
+                    src={image}
+                    alt={title}
+                  />
+                </p>
+               
+               
+                  <p className="break-words mb-3">
+                    <span>Description:</span> {description}
+                  </p>
+                  <p className="break-words">
+                    <span className="break-words">Ingredients:</span> 
+                    {ingredients.join(", ")}
+                  </p>
+               
+              </div>
+              <CoffeBtns logdata={logdata} id={id} deleteQuery={deleteQuery} />
             </li>
           </ul>
         </motion.div>

@@ -6,7 +6,7 @@ function Home(): JSX.Element {
   return (
     <div className="App">
       <Root />
-      <div className=" max-w-[1000px]  bg- mx-auto  bg-red-400 shadow-lg rounded-lg p-2 m-2">
+      <div className=" max-w-[1000px]    mx-auto  bg-red-400  shadow-lg rounded-2xl p-10 mt-[100px] text-center">
         Welcome to Café YOU! Cafe YOU logo w RESTAURANTCafe YOU Hours: Monday to
         Saturday: 7:45 AM to 3:30 PM. Kitchen closes at 3 PM. If you are coming
         with a group of more than 6 people please make a reservation –

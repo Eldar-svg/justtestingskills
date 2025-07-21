@@ -44,9 +44,9 @@ const ProductPage = (): JSX.Element => {
   const { title, description, ingredients, image, check } = product;
 
   return (
-    <div>
+    <div >
       <Root />
-      <EachCoffe
+     <div className="flex justify-center mt-[100px] "><EachCoffe
         id={id!}
         title={title}
         description={description}
@@ -56,7 +56,7 @@ const ProductPage = (): JSX.Element => {
         deleteQuery={deleteQuery}
         check={check} // Передаём текущее состояние чекбокса
         CheckToggle={CheckToggle} // Передаём функцию для переключения
-      />
+      /></div> 
     </div>
   );
 };
