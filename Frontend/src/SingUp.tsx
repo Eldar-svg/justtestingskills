@@ -1,24 +1,33 @@
 import React, { useState } from "react";
 import axios, { AxiosError } from "axios";
- 
+
 import { useNavigate } from "react-router-dom";
 
 interface SingUpDate {
   username: string;
   password: string;
+  gender: string;
+  age: string;
+  country: string;
   role?: string;
 }
 
 interface SignUpResponse {
   username: string;
   role: string;
-  message?: string; // Опциональное поле для сообщения от сервера
+  message?: string;
+  country: string;
+  gender: string;
+  age: string;
 }
 
 const SingUp: React.FC = () => {
   const [form, setForm] = useState<SingUpDate>({
     username: "",
     password: "",
+    gender: "",
+    age: "",
+    country: "",
     role: "user",
   }); // Добавляем поле роли
   const [message, setMessage] = useState<string>("");
@@ -41,9 +50,7 @@ const SingUp: React.FC = () => {
         form,
         { withCredentials: true }
       );
-      const { username, role } = response.data;
 
-      console.log(username, role);
       setMessage("Registration successful! " + response?.data?.message);
 
       setTimeout(() => {
@@ -86,6 +93,30 @@ const SingUp: React.FC = () => {
               name="password"
               placeholder="Password"
               value={form.password}
+              onChange={handleChange}
+            />
+            <input
+              className="input"
+              type="text"
+              placeholder="gender"
+              name="gender"
+              value={form.gender}
+              onChange={handleChange}
+            />
+            <input
+              className="input"
+              type="text"
+              placeholder="age"
+              name="age"
+              value={form.age}
+              onChange={handleChange}
+            />
+             <input
+              className="input"
+              type="text"
+              placeholder="country"
+              name="country"
+              value={form.country}
               onChange={handleChange}
             />
             <button className="btn" type="submit" disabled={loading}>
