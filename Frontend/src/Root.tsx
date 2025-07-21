@@ -1,55 +1,58 @@
 import { Link } from "react-router-dom";
- 
 import useUserToken from "./hooks/useUserToken";
- 
+
 function Root(): JSX.Element {
-  const { role, username, isLoggedIn, errorMessage, handleLogOut } =
-    useUserToken();
+  const { role, username, isLoggedIn, errorMessage, handleLogOut } = useUserToken();
 
   return (
-    <div className="w-full  ">
-      <div className=" flex  ">
-        <ul className=" relative flex bg-opacity-[70%] bg-red-300 w-full p-1  mb-5 mt-10 gap-1 items-center ">
-          <li className="rootbtn">
-            <Link style={{ textDecoration: "none" }} to={`/`}>
+    <div className="flex relative w-full">
+      <ul className="flex justify-between items-center bg-red-300 bg-opacity-100 w-full  max-h-[100px] p-5 mt-[60px] space-x-7">
+        {/* Левый блок: About Us и Products */}
+        <div className="flex space-x-7">
+          <li>
+            <Link className="mainbtn" to="/">
               About Us
             </Link>
           </li>
-          <li className="rootbtn">
-            <Link style={{ textDecoration: "none" }} to={`/products`}>
-
+          <li>
+            <Link className="mainbtn" to="/products">
               Products
             </Link>
           </li>
-          <li className="rootbtn">Contacts</li>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-[600px] max-w-[200px] shadow-xl ">
-            <img 
-              src="./coffee-shop-logos-design-template-cda8575e146cc5ba17cd3c1a24d65ba1_screen.jpg"
-              alt="alt"
-              className="rounded-[600px]  max-w-[240px] mt-9 shadow-xl"
-            />
-          </div>
+        </div>
+
+        {/* Центральный блок: Логотип */}
+        <li className="w-[400px] ">
+          <img
+            src="./coffee-shop-logos-design-template.jpg"
+            alt="Coffee Shop Logo"
+            className="rounded-full mx-[120px]  w-[200px] shadow-2xl"
+          />
+        </li>
+
+        {/* Правый блок: Пользователь и кнопка */}
+        <div className="flex items-center space-x-4">
           {isLoggedIn && (
-            <li className=" text-center rounded-lg shadow-lg bg-white m-5 p-5 text-black ml-auto gap-1">
-              Welcome {username || "guest"}! <p>You Have role: {role}</p>
+            <li className="text-center rounded-lg shadow-lg bg-white p-4 text-black">
+              Welcome {username || "guest"}! <p>You have role: {role}</p>
             </li>
           )}
           {errorMessage && <div className="text-black">{errorMessage}</div>}
-
+          
           <button
             onClick={handleLogOut}
-            className="bg-green-400 text-black hover:bg-red-400 p-5 m-5 rounded-lg shadow-xl"
+            className="bg-green-400 text-black hover:bg-red-400 px-5 py-2 rounded-lg shadow-xl"
           >
             {isLoggedIn ? (
               "Logout"
             ) : (
-              <Link style={{ textDecoration: "none" }} to={`/login`}>
+              <Link className="text-black no-underline" to="/login">
                 Log In
               </Link>
             )}
           </button>
-        </ul>
-      </div>
+        </div>
+      </ul>
     </div>
   );
 }

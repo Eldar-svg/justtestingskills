@@ -26,8 +26,6 @@ app.use(
 
 // Добавляем заголовки CORS для поддержки авторизации
 
-
-
 const users = []; // Временное хранилище пользователей
 const goods = [
   {
@@ -35,7 +33,8 @@ const goods = [
     title: "Test Product",
     ingredients: ["Ingredient 1", "Ingredient 2"],
     description: "Test Description",
-    image: "https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg",
+    image:
+      "https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg",
     check: false,
   },
 ];
@@ -59,9 +58,9 @@ const verifyToken = (req, res, next) => {
 
 // Регистрация пользователя
 app.post("/register", async (req, res) => {
-  const { username, password, role } = req.body;
+  const { username, password, role, gender, country, age } = req.body;
 
-  if (!username || !password || !role) {
+  if (!username || !password || !role || !gender || !country || !age) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -76,6 +75,9 @@ app.post("/register", async (req, res) => {
     username,
     password: hashedPassword,
     role,
+    gender,
+    country,
+    age,
   };
   users.push(newUser);
 
@@ -227,6 +229,15 @@ app.get("/goods/:id", async (req, res) => {
   }
   res.json(product);
 });
+
+app.get("/register/:id",async(req,res)=>{
+  const {id}=req.params
+  const findUsers= users.find((user)=>user.id===id)
+  if (!findUsers) {
+    return res.status(404).json({ error: "Product not found" });
+  }
+  res.json(findUsers);
+})
 
 // Обновление продукта по ID
 app.put("/goods/:id", async (req, res) => {

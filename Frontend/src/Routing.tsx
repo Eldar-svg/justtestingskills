@@ -9,7 +9,9 @@ import App from "./App";
 import EditCoffe from "./mainstructure/Products/coffe-list/EditCoffe";
 import SingUp from "./SingUp";
 import Layout from "./Layout";
-
+import EditProfile from "./EditProfile"; 
+ 
+import Profile from "./Profile";
 interface ProtectedRouteProps {
   element: ReactElement;
 }
@@ -20,17 +22,15 @@ interface RouterReady {
 }
 
 function ProtectedRoute({ element }: ProtectedRouteProps): JSX.Element {
-  const isAuth = !sessionStorage.getItem("token"); 
+  const isAuth = !sessionStorage.getItem("token");
   return isAuth ? element : <Navigate to="/login" replace />;
 }
-
-
 
 function useRouting(): RouterReady {
   const clientQ = new QueryClient({
     defaultOptions: {
       queries: {
-        refetchOnWindowFocus: false, 
+        refetchOnWindowFocus: false,
       },
     },
   });
@@ -68,6 +68,15 @@ function useRouting(): RouterReady {
       element: <ProtectedRoute element={<EditCoffe />} />,
       errorElement: <ErrorPage />,
     },
+    {
+      path: "/profile/:id",
+      element: <ProtectedRoute element={<Profile />} />,
+      errorElement: <ErrorPage />,
+    },
+    {path:"/profile/edit/:id",
+      element:<ProtectedRoute element={<EditProfile/>} />,
+      errorElement: <ErrorPage />,
+    }
   ]);
 
   return { clientQ, router };
